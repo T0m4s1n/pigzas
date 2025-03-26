@@ -1,26 +1,44 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --brass-50: #F9F4F1;
+  --brass-100: #EDE2D8;
+  --brass-200: #DAC3AD;
+  --brass-300: #C7A182;
+  --brass-400: #B6815D;
+  --brass-500: #AE6F52;
+  --brass-600: #995846;
+  --brass-700: #804535D;
+  --brass-800: #6A3A36;
+  --brass-900: #58312F;
+  --brass-950: #311817;
+  --background: var(--brass-50);
+  --foreground: hsl(20, 20%, 20%);
+  --accent: var(--brass-700);
+  --accent-light: var(--brass-300);
+  --accent-dark: var(--brass-800);
+  --card-background: var(--brass-100);
+  --muted-foreground: hsl(20, 10%, 40%);
+  --border: var(--brass-200);
 }
-
+[data-theme="dark"] {
+  --background: var(--brass-900);
+  --foreground: hsl(20, 30%, 90%);
+  --accent: var(--brass-400);
+  --accent-light: var(--brass-600);
+  --accent-dark: var(--brass-500);
+  --card-background: var(--brass-800);
+  --muted-foreground: var(--brass-300);
+  --border: var(--brass-700);
+}
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
