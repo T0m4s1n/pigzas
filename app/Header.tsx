@@ -14,7 +14,7 @@ const PizzaHeader: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '#menu', label: 'Menú', icon: Menu },
+    { href: '/Menu', label: 'Menú', icon: Menu },
     { href: '#create', label: 'Crear Pizza', icon: PizzaIcon },
     { href: '#about', label: 'Sobre Nosotros', icon: Info },
   ];
@@ -32,23 +32,23 @@ const PizzaHeader: React.FC = () => {
 
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
         <div className="container flex h-24 items-center justify-between px-6 relative">
-          {/* Logo or Brand */}
-          <motion.div 
+          <motion.a 
+            href="/"
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ 
               type: "tween", 
               duration: 0.3
             }}
-            className="flex items-center space-x-4"
+            className="flex items-center space-x-4 cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <span className="font-['Dancing_Script'] font-bold text-[var(--foreground)] text-3xl tracking-tight">
               Pigzas
             </span>
-          </motion.div>
-
-          {/* Desktop Navigation */}
+          </motion.a>
           <nav className="hidden md:flex space-x-6">
             {navLinks.map((link, index) => (
               <motion.a
@@ -79,10 +79,7 @@ const PizzaHeader: React.FC = () => {
               </motion.a>
             ))}
           </nav>
-
-          {/* Actions */}
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle Button */}
             <motion.button 
               onClick={toggleTheme} 
               whileHover={{ rotate: 10 }}
@@ -105,8 +102,6 @@ const PizzaHeader: React.FC = () => {
                 <Moon className="h-6 w-6" />
               )}
             </motion.button>
-
-            {/* Shopping Cart */}
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -138,7 +133,6 @@ const PizzaHeader: React.FC = () => {
               </motion.span>
             </motion.button>
 
-            {/* Hamburger Menu for Mobile */}
             <motion.button 
               onClick={toggleMobileMenu}
               whileTap={{ scale: 0.9 }}
@@ -153,7 +147,6 @@ const PizzaHeader: React.FC = () => {
               )}
             </motion.button>
 
-            {/* Order Now Button (Visible on larger screens) */}
             <motion.button 
               whileHover={{ 
                 scale: 1.05,
@@ -179,7 +172,6 @@ const PizzaHeader: React.FC = () => {
             </motion.button>
           </div>
 
-          {/* Mobile Menu Overlay */}
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.div

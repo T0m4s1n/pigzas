@@ -7,7 +7,6 @@ import { Pizza, PizzaIcon, ShoppingBag } from 'lucide-react';
 export default function Home() {
   return (
     <div className="container mx-auto px-6 pt-24 min-h-screen flex flex-col md:flex-row items-center justify-between">
-      {/* Pizza Image Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ 
@@ -28,7 +27,6 @@ export default function Home() {
         />
       </motion.div>
 
-      {/* Content Section */}
       <motion.div 
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
