@@ -15,8 +15,8 @@ const PizzaHeader: React.FC = () => {
 
   const navLinks = [
     { href: '/Menu', label: 'Menú', icon: Menu },
-    { href: '#create', label: 'Crear Pizza', icon: PizzaIcon },
-    { href: '#about', label: 'Sobre Nosotros', icon: Info },
+    { href: '/Design', label: 'Crear Pizza', icon: PizzaIcon },
+    { href: '/About', label: 'Sobre Nosotros', icon: Info },
   ];
 
   return (

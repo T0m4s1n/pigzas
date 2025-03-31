@@ -23,7 +23,7 @@ export default function Menu() {
       id: 1,
       name: "Clásica Margherita",
       description: "Tomate, mozzarella fresca, albahaca y aceite de oliva",
-      price: 12.99,
+      price: 16.900,
       image: "./marguerita.jpg",
       details: "Una pizza tradicional italiana con ingredientes frescos. La base perfecta de masa crujiente, salsa de tomate casera, mozzarella de búfala y albahaca fresca del huerto.",
       prepTime: "12 minutos"
@@ -32,7 +32,7 @@ export default function Menu() {
       id: 2,
       name: "Pepperoni Suprema",
       description: "Pepperoni, mozzarella, salsa de tomate y orégano",
-      price: 14.99,
+      price: 25.900,
       image: "./peperroni.jpg",
       details: "Nuestra pizza más popular. Generosas capas de pepperoni picante, queso mozzarella derretido y una pizca de orégano italiano para darle ese sabor auténtico.",
       prepTime: "15 minutos"
@@ -41,7 +41,7 @@ export default function Menu() {
       id: 3,
       name: "Vegetariana Deluxe",
       description: "Pimientos, champiñones, cebolla, aceitunas y queso",
-      price: 13.99,
+      price: 24.900,
       image: "./veg.jpg",
       details: "Una explosión de sabores vegetales. Pimientos frescos, champiñones salteados, cebolla caramelizada, aceitunas negras y una mezcla de quesos gourmet sobre nuestra masa artesanal.",
       prepTime: "18 minutos"
@@ -50,7 +50,7 @@ export default function Menu() {
       id: 4,
       name: "Hawaiana Especial",
       description: "Jamón, piña, mozzarella y salsa de tomate",
-      price: 15.99,
+      price: 19.900,
       image: "./hawai.jpg",
       details: "La combinación perfecta de dulce y salado. Jamón premium, trozos de piña fresca y mozzarella cremosa sobre una base de salsa de tomate casera con un toque de especias.",
       prepTime: "14 minutos"
@@ -69,7 +69,7 @@ export default function Menu() {
 
 
   const goToDesignPage = () => {
-    router.push('/design');
+    router.push('/Design');
   };
 
   return (
