@@ -20,7 +20,24 @@ const PizzaHeader: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Load cart from localStorage on component mount
+    try {
+      const savedCart = localStorage.getItem('shoppingCart');
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error("Failed to load cart from localStorage:", error);
+    }
   }, []);
+
+  // Save cart to localStorage when it changes
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('shoppingCart', JSON.stringify(cartItems));
+    }
+  }, [cartItems, mounted]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -34,6 +51,7 @@ const PizzaHeader: React.FC = () => {
     setIsMobileMenuOpen(false);
     setIsCartOpen(true);
   };
+  
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const navLinks = [
@@ -41,6 +59,7 @@ const PizzaHeader: React.FC = () => {
     { href: '/Design', label: 'Crear Pizza', icon: PizzaIcon },
     { href: '/About', label: 'Sobre Nosotros', icon: Info },
   ];
+  
   if (!mounted) {
     return (
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
@@ -159,7 +178,8 @@ const PizzaHeader: React.FC = () => {
             >
               <ShoppingBag className="h-5 w-5" />
               <motion.span 
-                initial={{ scale: 0 }}
+                key={totalItems}
+                initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 className="
@@ -281,7 +301,7 @@ const PizzaHeader: React.FC = () => {
                     "
                   >
                     <ShoppingBag className="h-5 w-5" />
-                    <span>Ver Carrito</span>
+                    <span>Ver Carrito ({totalItems})</span>
                   </motion.button>
                 </div>
               </motion.div>

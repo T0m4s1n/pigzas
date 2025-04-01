@@ -5,7 +5,8 @@ import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-interface CartItem {
+// Define the cart item interface
+export interface CartItem {
   id: string;
   name: string;
   size: string;
@@ -14,6 +15,7 @@ interface CartItem {
   image: string;
 }
 
+// Order details interface for checkout
 export interface OrderDetails {
   orderId: string;
   items: CartItem[];
@@ -23,33 +25,93 @@ export interface OrderDetails {
   timestamp: string;
 }
 
-const ShoppingCart = ({ isOpen, onClose, cartItems, setCartItems }: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  cartItems: CartItem[]; 
-  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; 
+// Props interface for the component
+interface ShoppingCartProps {
+  isOpen: boolean;
+  onClose: () => void;
+  // Instead of passing the state directly, use a cart service pattern
+  cartService?: {
+    getItems: () => CartItem[];
+    addItem: (item: CartItem) => void;
+    updateItemQuantity: (id: string, quantity: number) => void;
+    removeItem: (id: string) => void;
+    clearCart: () => void;
+  };
+}
+
+interface ShoppingCartProps {
+  isOpen: boolean;
+  onClose: () => void;
+  cartItems: { id: string; name: string; size: string; price: number; quantity: number; image: string; }[];
+  setCartItems: React.Dispatch<React.SetStateAction<{ id: string; name: string; size: string; price: number; quantity: number; image: string; }[]>>;
+}
+
+const ShoppingCart: React.FC<ShoppingCartProps> = ({ 
+  isOpen, 
+  onClose, 
+  cartService 
 }) => {
+  // If no cart service is provided, create local state
+  const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const router = useRouter();
 
+  // Initialize cart from localStorage on component mount
+  useEffect(() => {
+    if (!cartService) {
+      try {
+        const savedCart = localStorage.getItem('shoppingCart');
+        if (savedCart) {
+          setLocalCartItems(JSON.parse(savedCart));
+        }
+      } catch (error) {
+        console.error("Failed to load cart from localStorage:", error);
+      }
+    }
+  }, [cartService]);
+
+  // Save local cart to localStorage when it changes
+  useEffect(() => {
+    if (!cartService) {
+      localStorage.setItem('shoppingCart', JSON.stringify(localCartItems));
+    }
+  }, [localCartItems, cartService]);
+
+  // Use cart service if provided, otherwise use local state
+  const cartItems = cartService ? cartService.getItems() : localCartItems;
+
+  // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = 2.99;
+  const deliveryFee = subtotal > 0 ? 2.99 : 0;
   const total = subtotal + deliveryFee;
 
+  // Cart operations
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
+    if (cartService) {
+      cartService.updateItemQuantity(id, newQuantity);
+    } else {
+      setLocalCartItems(items => 
+        items.map(item => item.id === id ? { ...item, quantity: newQuantity } : item)
+      );
+    }
   };
 
   const removeItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
+    if (cartService) {
+      cartService.removeItem(id);
+    } else {
+      setLocalCartItems(items => items.filter(item => item.id !== id));
+    }
   };
 
   const clearCart = () => {
-    setCartItems([]);
+    if (cartService) {
+      cartService.clearCart();
+    } else {
+      setLocalCartItems([]);
+    }
   };
 
   const handleCheckout = () => {
@@ -67,9 +129,12 @@ const ShoppingCart = ({ isOpen, onClose, cartItems, setCartItems }: {
         timestamp: new Date().toISOString()
       };
 
+      // Save order to localStorage
       localStorage.setItem(`order_${orderId}`, JSON.stringify(orderDetails));
 
+      // Clear cart after successful order
       setTimeout(() => {
+        clearCart();
         setIsCheckingOut(false);
         onClose();
         router.push(`/Payment?id=${orderId}`);
@@ -81,6 +146,7 @@ const ShoppingCart = ({ isOpen, onClose, cartItems, setCartItems }: {
     }
   };
 
+  // Close on escape key
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();

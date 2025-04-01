@@ -93,7 +93,7 @@ export default function Home() {
           </div>
 
           <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
-            Tu Pizza, Tu Diseño
+            Tu Pizza, Tu Eleccion
           </h2>
 
           <p className="text-lg mb-6 leading-relaxed">
