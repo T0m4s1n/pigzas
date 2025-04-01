@@ -1,23 +1,63 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, Menu, X, ShoppingBag, PizzaIcon, Info, Sun, Moon, Pizza } from 'lucide-react';
 import { useTheme } from './themeutils';
 import { motion, AnimatePresence } from 'framer-motion';
+import ShoppingCart from './Shoppingcart';
 
 const PizzaHeader: React.FC = () => {
-  const { theme, toggleTheme } = useTheme() as { theme: 'light' | 'dark'; toggleTheme: () => void };
+  const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const { theme, toggleTheme } = useTheme() as { theme: 'light' | 'dark'; toggleTheme: () => void };
+  
+  const [cartItems, setCartItems] = useState([
+    { id: '1', name: 'Pizza Margarita', size: 'Mediana', price: 12.99, quantity: 1, image: '/api/placeholder/80/80' },
+    { id: '2', name: 'Pizza Pepperoni', size: 'Grande', price: 15.99, quantity: 2, image: '/api/placeholder/80/80' },
+  ]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
+  const openCart = () => {
+    setIsMobileMenuOpen(false);
+    setIsCartOpen(true);
+  };
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const navLinks = [
     { href: '/Menu', label: 'Menú', icon: Menu },
     { href: '/Design', label: 'Crear Pizza', icon: PizzaIcon },
     { href: '/About', label: 'Sobre Nosotros', icon: Info },
   ];
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
+        <div className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
+          <div className="flex items-center space-x-4">
+            <div className="h-10 w-10" />
+            <span className="font-['Dancing_Script'] font-bold text-3xl tracking-tight">
+              Pigzas
+            </span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-full" />
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -31,7 +71,7 @@ const PizzaHeader: React.FC = () => {
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
-        <div className="container flex h-24 items-center justify-between px-6 relative">
+        <div className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
           <motion.a 
             href="/"
             initial={{ opacity: 0, x: -40 }}
@@ -49,7 +89,8 @@ const PizzaHeader: React.FC = () => {
               Pigzas
             </span>
           </motion.a>
-          <nav className="hidden md:flex space-x-6">
+          
+          <nav className="hidden md:flex items-center space-x-6">
             {navLinks.map((link, index) => (
               <motion.a
                 key={link.label}
@@ -74,19 +115,20 @@ const PizzaHeader: React.FC = () => {
                   font-medium
                 "
               >
-                <link.icon className="h-6 w-6" />
+                <link.icon className="h-5 w-5" />
                 <span>{link.label}</span>
               </motion.a>
             ))}
           </nav>
-          <div className="flex items-center space-x-4">
+          
+          <div className="flex items-center space-x-3">
             <motion.button 
               onClick={toggleTheme} 
               whileHover={{ rotate: 10 }}
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.1 }}
               className="
-                p-3 rounded-full 
+                p-2 rounded-full 
                 bg-[var(--card-background)]
                 text-[var(--foreground)]
                 hover:bg-[var(--border)]
@@ -97,23 +139,25 @@ const PizzaHeader: React.FC = () => {
               "
             >
               {theme === 'dark' ? (
-                <Sun className="h-6 w-6" />
+                <Sun className="h-5 w-5" />
               ) : (
-                <Moon className="h-6 w-6" />
+                <Moon className="h-5 w-5" />
               )}
             </motion.button>
+          
             <motion.button 
+              onClick={toggleCart}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.1 }}
               className="
-                relative p-3 rounded-full
+                relative p-2 rounded-full
                 bg-[var(--card-background)]
                 text-[var(--foreground)]
                 hover:bg-[var(--border)]
               "
             >
-              <ShoppingBag className="h-6 w-6" />
+              <ShoppingBag className="h-5 w-5" />
               <motion.span 
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -122,14 +166,14 @@ const PizzaHeader: React.FC = () => {
                   absolute -top-2 -right-2 
                   bg-[var(--accent)] text-white 
                   rounded-full 
-                  w-6 h-6 
+                  w-5 h-5 
                   flex items-center justify-center 
                   text-xs
                   font-['Playwrite_HU']
                   font-bold
                 "
               >
-                0
+                {totalItems}
               </motion.span>
             </motion.button>
 
@@ -137,17 +181,18 @@ const PizzaHeader: React.FC = () => {
               onClick={toggleMobileMenu}
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.1 }}
-              className="md:hidden p-3 rounded-full bg-[var(--card-background)]"
+              className="md:hidden p-2 rounded-full bg-[var(--card-background)]"
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6 text-[var(--foreground)]" />
+                <X className="h-5 w-5 text-[var(--foreground)]" />
               ) : (
-                <Home className="h-6 w-6 text-[var(--foreground)]" />
+                <Home className="h-5 w-5 text-[var(--foreground)]" />
               )}
             </motion.button>
 
-            <motion.button 
+            <motion.a 
+              href="/Menu"
               whileHover={{ 
                 scale: 1.05,
                 backgroundColor: 'var(--brass-600)' 
@@ -156,7 +201,7 @@ const PizzaHeader: React.FC = () => {
               transition={{ duration: 0.1 }}
               className="
                 hidden md:flex
-                px-6 py-3 
+                px-4 py-2 
                 bg-[var(--brass-500)] 
                 text-white 
                 rounded-full 
@@ -167,9 +212,9 @@ const PizzaHeader: React.FC = () => {
                 hover:shadow-lg
               "
             >
-              <ShoppingBag className="h-6 w-6" />
+              <ShoppingBag className="h-5 w-5" />
               <span className="font-semibold">Hacer Pedido</span>
-            </motion.button>
+            </motion.a>
           </div>
 
           <AnimatePresence>
@@ -187,9 +232,10 @@ const PizzaHeader: React.FC = () => {
                   bg-[var(--background)]
                   shadow-lg 
                   md:hidden
+                  border-b border-[var(--border)]
                 "
               >
-                <div className="flex flex-col items-center py-6 space-y-6">
+                <div className="flex flex-col items-center py-4 space-y-4">
                   {navLinks.map((link, index) => (
                     <motion.a
                       key={link.label}
@@ -209,11 +255,13 @@ const PizzaHeader: React.FC = () => {
                         font-medium
                       "
                     >
-                      <link.icon className="h-7 w-7" />
+                      <link.icon className="h-6 w-6" />
                       <span>{link.label}</span>
                     </motion.a>
                   ))}
-                  <motion.button 
+                  
+                  <motion.button
+                    onClick={openCart}
                     whileHover={{ 
                       scale: 1.05,
                       backgroundColor: 'var(--brass-600)' 
@@ -221,7 +269,8 @@ const PizzaHeader: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.1 }}
                     className="
-                      px-6 py-3 
+                      mt-2
+                      px-5 py-2.5
                       bg-[var(--brass-500)] 
                       text-white  
                       rounded-full 
@@ -231,8 +280,8 @@ const PizzaHeader: React.FC = () => {
                       shadow-md
                     "
                   >
-                    <ShoppingBag className="h-6 w-6" />
-                    <span>Hacer Pedido</span>
+                    <ShoppingBag className="h-5 w-5" />
+                    <span>Ver Carrito</span>
                   </motion.button>
                 </div>
               </motion.div>
@@ -240,6 +289,13 @@ const PizzaHeader: React.FC = () => {
           </AnimatePresence>
         </div>
       </header>
+
+      <ShoppingCart 
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+      />
     </>
   );
 };

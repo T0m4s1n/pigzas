@@ -8,7 +8,6 @@ export class ThemeManager {
   private static STORAGE_KEY = 'portfolio-theme-preference';
 
   static getTheme(): Theme {
-    // Early return for server-side rendering
     if (typeof window === 'undefined') return 'dark';
 
     const savedTheme = localStorage.getItem(this.STORAGE_KEY) as Theme | null;
@@ -22,7 +21,6 @@ export class ThemeManager {
   }
 
   static setTheme(theme: Theme): void {
-    // Early return for server-side rendering
     if (typeof window === 'undefined') return;
     
     localStorage.setItem(this.STORAGE_KEY, theme);
@@ -33,8 +31,6 @@ export class ThemeManager {
     root.classList.toggle('light', theme === 'light');
     root.setAttribute('data-theme', theme);
     root.style.colorScheme = theme;
-
-    // Dispatch custom event for theme change
     window.dispatchEvent(new CustomEvent('theme-change', { detail: { theme } }));
   }
 
@@ -46,7 +42,6 @@ export class ThemeManager {
   }
 
   static initTheme(): (() => void) | void {
-    // Early return for server-side rendering
     if (typeof window === 'undefined') return;
     
     const theme = this.getTheme();
@@ -55,7 +50,6 @@ export class ThemeManager {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const handleThemeChange = (e: MediaQueryListEvent) => {
-      // Only change theme automatically if no user preference is saved
       if (!localStorage.getItem(this.STORAGE_KEY)) {
         this.setTheme(e.matches ? 'dark' : 'light');
       }
@@ -71,22 +65,17 @@ export class ThemeManager {
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Initialize theme from localStorage or system preference
     return typeof window !== 'undefined' ? ThemeManager.getTheme() : 'dark';
   });
 
   useEffect(() => {
-    // Initialize theme and set up media query listener
     const cleanup = ThemeManager.initTheme();
-
-    // Listen for theme changes from other parts of the application
     const handleThemeChange = (e: CustomEvent<{ theme: Theme }>) => {
       setTheme(e.detail.theme);
     };
     
     window.addEventListener('theme-change', handleThemeChange as EventListener);
     
-    // Cleanup both media query listener and theme change listener
     return () => {
       if (cleanup instanceof Function) {
         cleanup();

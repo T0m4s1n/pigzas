@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Pizza, Plus, ShoppingBag, Info, X, Clock } from 'lucide-react';
 import PizzaHeader from '../Header';
 import { useRouter } from 'next/navigation';
+import PigzasBackground from '../Pizzabackground';
 
 export default function Menu() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Menu() {
       id: 1,
       name: "Clásica Margherita",
       description: "Tomate, mozzarella fresca, albahaca y aceite de oliva",
-      price: 16.900,
+      price: 16900,
       image: "./marguerita.jpg",
       details: "Una pizza tradicional italiana con ingredientes frescos. La base perfecta de masa crujiente, salsa de tomate casera, mozzarella de búfala y albahaca fresca del huerto.",
       prepTime: "12 minutos"
@@ -32,7 +33,7 @@ export default function Menu() {
       id: 2,
       name: "Pepperoni Suprema",
       description: "Pepperoni, mozzarella, salsa de tomate y orégano",
-      price: 25.900,
+      price: 25900,
       image: "./peperroni.jpg",
       details: "Nuestra pizza más popular. Generosas capas de pepperoni picante, queso mozzarella derretido y una pizca de orégano italiano para darle ese sabor auténtico.",
       prepTime: "15 minutos"
@@ -41,7 +42,7 @@ export default function Menu() {
       id: 3,
       name: "Vegetariana Deluxe",
       description: "Pimientos, champiñones, cebolla, aceitunas y queso",
-      price: 24.900,
+      price: 24900,
       image: "./veg.jpg",
       details: "Una explosión de sabores vegetales. Pimientos frescos, champiñones salteados, cebolla caramelizada, aceitunas negras y una mezcla de quesos gourmet sobre nuestra masa artesanal.",
       prepTime: "18 minutos"
@@ -50,10 +51,28 @@ export default function Menu() {
       id: 4,
       name: "Hawaiana Especial",
       description: "Jamón, piña, mozzarella y salsa de tomate",
-      price: 19.900,
+      price: 19900,
       image: "./hawai.jpg",
       details: "La combinación perfecta de dulce y salado. Jamón premium, trozos de piña fresca y mozzarella cremosa sobre una base de salsa de tomate casera con un toque de especias.",
       prepTime: "14 minutos"
+    },
+    {
+      id: 5,
+      name: "Cuatro Quesos",
+      description: "Mozzarella, gorgonzola, parmesano y queso de cabra",
+      price: 27900,
+      image: "./queso.jpg",
+      details: "Una delicia para los amantes del queso. Cuatro quesos premium que se derriten en perfecta armonía: mozzarella cremosa, gorgonzola intenso, parmesano con carácter y queso de cabra suave.",
+      prepTime: "16 minutos"
+    },
+    {
+      id: 6,
+      name: "Carnívora Extrema",
+      description: "Carne molida, salchicha, jamón, tocino y pepperoni",
+      price: 29900,
+      image: "./jefe.jpg",
+      details: "Para verdaderos amantes de la carne. Combinamos cinco tipos de carnes premium sobre nuestra deliciosa masa artesanal, con salsa de tomate especial y una generosa capa de queso mozzarella.",
+      prepTime: "20 minutos"
     }
   ]);
 
@@ -72,6 +91,15 @@ export default function Menu() {
     router.push('/Design');
   };
 
+  // Format price with dot as thousands separator and COP currency
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('es-CO', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+  };
+
   return (
     <>
       <style jsx global>{`
@@ -84,15 +112,54 @@ export default function Menu() {
       `}</style>
 
       <PizzaHeader />
-
-      <div className="container mx-auto px-6 py-32 min-h-screen">
+      <PigzasBackground />
+      <div className="container mx-auto px-6 py-16 min-h-screen">
+        
+      <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
+            ¿Prefieres crear tu propia pizza?
+          </h2>
+          <motion.button
+            whileHover={{ 
+              scale: 1.05,
+              backgroundColor: 'var(--brass-600)' 
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.1 }}
+            className="
+              mt-4 
+              px-8 py-4 
+              bg-[var(--brass-500)] 
+              text-white  
+              rounded-full 
+              flex 
+              items-center 
+              justify-center
+              space-x-3
+              shadow-md
+              hover:shadow-lg
+              text-lg
+              font-semibold
+              mx-auto
+            "
+            onClick={goToDesignPage}
+          >
+            <Plus className="h-6 w-6" />
+            <span>Diseña Tu Propia Pizza</span>
+          </motion.button>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="flex items-center justify-center space-x-4 mb-4">
+          <div className="flex items-center justify-center space-x-4 mb-4 mt-8">
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <h1 className="font-['Dancing_Script'] font-bold text-4xl text-[var(--foreground)]">
               Menú Pigzas
@@ -130,7 +197,7 @@ export default function Menu() {
               <div className="p-6">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="text-xl font-bold text-[var(--foreground)]">{pizza.name}</h3>
-                  <span className="font-bold text-[var(--accent)]">${pizza.price}</span>
+                  <span className="font-bold text-[var(--accent)]">${formatPrice(pizza.price)}</span>
                 </div>
                 <p className="text-[var(--foreground-muted)] mb-4">{pizza.description}</p>
                 <div className="flex space-x-2">
@@ -185,45 +252,6 @@ export default function Menu() {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-16 text-center"
-        >
-          <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
-            ¿Prefieres crear tu propia pizza?
-          </h2>
-          <motion.button
-            whileHover={{ 
-              scale: 1.05,
-              backgroundColor: 'var(--brass-600)' 
-            }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.1 }}
-            className="
-              mt-4 
-              px-8 py-4 
-              bg-[var(--brass-500)] 
-              text-white  
-              rounded-full 
-              flex 
-              items-center 
-              justify-center
-              space-x-3
-              shadow-md
-              hover:shadow-lg
-              text-lg
-              font-semibold
-              mx-auto
-            "
-            onClick={goToDesignPage}
-          >
-            <Plus className="h-6 w-6" />
-            <span>Diseña Tu Propia Pizza</span>
-          </motion.button>
-        </motion.div>
       </div>
 
       {selectedPizza && (
@@ -270,7 +298,7 @@ export default function Menu() {
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="font-bold text-xl text-[var(--accent)]">${selectedPizza.price}</span>
+              <span className="font-bold text-xl text-[var(--accent)]">${formatPrice(selectedPizza.price)}</span>
               <motion.button
                 whileHover={{ 
                   scale: 1.05,
