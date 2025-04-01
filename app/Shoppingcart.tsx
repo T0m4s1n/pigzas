@@ -39,13 +39,6 @@ interface ShoppingCartProps {
   };
 }
 
-interface ShoppingCartProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cartItems: { id: string; name: string; size: string; price: number; quantity: number; image: string; }[];
-  setCartItems: React.Dispatch<React.SetStateAction<{ id: string; name: string; size: string; price: number; quantity: number; image: string; }[]>>;
-}
-
 const ShoppingCart: React.FC<ShoppingCartProps> = ({ 
   isOpen, 
   onClose, 
@@ -80,10 +73,17 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
   // Use cart service if provided, otherwise use local state
   const cartItems = cartService ? cartService.getItems() : localCartItems;
 
-  // Calculate totals
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = subtotal > 0 ? 2.99 : 0;
+  // Calculate totals - using the values directly as COP
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const deliveryFee = subtotal > 0 ? 12000 : 0;
   const total = subtotal + deliveryFee;
+
+  // Display the complete price without any formatting, removing decimal points
+  const formatCOP = (amount: number) => {
+    // Convert to integer by removing decimal part
+    const integerAmount = Math.round(amount);
+    return `$${integerAmount}`;
+  }
 
   // Cart operations
   const updateQuantity = (id: string, newQuantity: number) => {
@@ -283,7 +283,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                               </motion.button>
                             </div>
                             <p className="font-medium text-[var(--foreground)]">
-                              €{(item.price * item.quantity).toFixed(2)}
+                              {formatCOP(item.price * item.quantity)}
                             </p>
                           </div>
                         </div>
@@ -324,15 +324,15 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                 <div className="space-y-2">
                   <div className="flex justify-between text-[var(--foreground-muted)]">
                     <span>Subtotal</span>
-                    <span>€{subtotal.toFixed(2)}</span>
+                    <span>{formatCOP(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-[var(--foreground-muted)]">
                     <span>Envío</span>
-                    <span>€{deliveryFee.toFixed(2)}</span>
+                    <span>{formatCOP(deliveryFee)}</span>
                   </div>
                   <div className="flex justify-between font-medium text-[var(--foreground)] text-lg pt-2 border-t border-[var(--border)]">
                     <span>Total</span>
-                    <span>€{total.toFixed(2)}</span>
+                    <span>{formatCOP(total)}</span>
                   </div>
                 </div>
 

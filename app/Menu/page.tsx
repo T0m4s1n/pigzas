@@ -120,7 +120,7 @@ export default function Menu() {
       id: 1,
       name: "Clásica Margherita",
       description: "Tomate, mozzarella fresca, albahaca y aceite de oliva",
-      price: 16900,
+      price: 16000,
       image: "./marguerita.jpg",
       details: "Una pizza tradicional italiana con ingredientes frescos. La base perfecta de masa crujiente, salsa de tomate casera, mozzarella de búfala y albahaca fresca del huerto.",
       prepTime: "12 minutos"
@@ -129,7 +129,7 @@ export default function Menu() {
       id: 2,
       name: "Pepperoni Suprema",
       description: "Pepperoni, mozzarella, salsa de tomate y orégano",
-      price: 25900,
+      price: 25999,
       image: "./peperroni.jpg",
       details: "Nuestra pizza más popular. Generosas capas de pepperoni picante, queso mozzarella derretido y una pizca de orégano italiano para darle ese sabor auténtico.",
       prepTime: "15 minutos"
@@ -138,7 +138,7 @@ export default function Menu() {
       id: 3,
       name: "Vegetariana Deluxe",
       description: "Pimientos, champiñones, cebolla, aceitunas y queso",
-      price: 24900,
+      price: 24999,
       image: "./veg.jpg",
       details: "Una explosión de sabores vegetales. Pimientos frescos, champiñones salteados, cebolla caramelizada, aceitunas negras y una mezcla de quesos gourmet sobre nuestra masa artesanal.",
       prepTime: "18 minutos"
@@ -147,7 +147,7 @@ export default function Menu() {
       id: 4,
       name: "Hawaiana Especial",
       description: "Jamón, piña, mozzarella y salsa de tomate",
-      price: 19900,
+      price: 19999,
       image: "./hawai.jpg",
       details: "La combinación perfecta de dulce y salado. Jamón premium, trozos de piña fresca y mozzarella cremosa sobre una base de salsa de tomate casera con un toque de especias.",
       prepTime: "14 minutos"
@@ -156,7 +156,7 @@ export default function Menu() {
       id: 5,
       name: "Cuatro Quesos",
       description: "Mozzarella, gorgonzola, parmesano y queso de cabra",
-      price: 27900,
+      price: 27999,
       image: "./queso.jpg",
       details: "Un festín para los amantes del queso. Cuatro quesos seleccionados: mozzarella, gorgonzola, parmesano y queso de cabra, todo derretido sobre nuestra masa crujiente con salsa de tomate.",
       prepTime: "16 minutos"
@@ -165,7 +165,7 @@ export default function Menu() {
       id: 6,
       name: "Carnívora Extrema",
       description: "Carne molida, salchicha, jamón, tocino y pepperoni",
-      price: 29900,
+      price: 29999,
       image: "./jefe.jpg",
       details: "Para verdaderos amantes de la carne. Combinamos cinco tipos de carnes premium sobre nuestra deliciosa masa artesanal, con salsa de tomate especial y una generosa capa de queso mozzarella.",
       prepTime: "20 minutos"
