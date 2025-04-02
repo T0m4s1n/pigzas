@@ -59,7 +59,7 @@ export default function AboutUs() {
           </h2>
           <p className="text-lg max-w-3xl mx-auto leading-relaxed">
             Bienvenidos a Pigzas, donde la tradición italiana se encuentra con la innovación culinaria. 
-            Desde nuestra apertura en 2010, nos hemos dedicado a crear pizzas artesanales que deleiten 
+            Desde nuestra apertura en 2025, nos hemos dedicado a crear pizzas artesanales que deleiten 
             y sorprendan a nuestros comensales.
           </p>
         </motion.section>
@@ -84,7 +84,7 @@ export default function AboutUs() {
               comunidad, pero con un toque único que reflejara nuestra identidad local.
             </p>
             <p className="text-[var(--foreground-muted)] mb-4 leading-relaxed">
-              Fundada por la familia Rodríguez, amantes de la gastronomía italiana, Pigzas nació de viajes por 
+              Fundada por el tomasin, amante de la gastronomía italiana, Pigzas nació de viajes por 
               Italia y años de experimentación con recetas tradicionales para adaptarlas a los gustos locales.
             </p>
             <p className="text-[var(--foreground-muted)] leading-relaxed">
