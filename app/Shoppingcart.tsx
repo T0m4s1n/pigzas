@@ -160,7 +160,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <motion.section
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
@@ -169,20 +169,20 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
             onClick={onClose}
           />
           
-          <motion.div
+          <motion.section
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: "tween", duration: 0.3 }}
             className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-md bg-[var(--background)] shadow-xl flex flex-col"
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-              <div className="flex items-center space-x-3">
+            <section className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+              <section className="flex items-center space-x-3">
                 <ShoppingBag className="h-6 w-6 text-[var(--accent)]" />
                 <h2 className="text-xl font-['Dancing_Script'] font-bold text-[var(--foreground)]">
                   Tu Pedido
                 </h2>
-              </div>
+              </section>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -191,10 +191,10 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
               >
                 <X className="h-5 w-5" />
               </motion.button>
-            </div>
-            <div className="flex-1 overflow-y-auto py-4 px-6">
+            </section>
+            <section className="flex-1 overflow-y-auto py-4 px-6">
               {cartItems.length === 0 ? (
-                <motion.div
+                <motion.section
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="flex flex-col items-center justify-center h-full space-y-4"
@@ -229,12 +229,12 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                     <span>Ver Menú</span>
                     <ArrowRight className="h-4 w-4" />
                   </motion.a>
-                </motion.div>
+                </motion.section>
               ) : (
-                <div className="space-y-6">
-                  <div className="space-y-4">
+                <section className="space-y-6">
+                  <section className="space-y-4">
                     {cartItems.map((item) => (
-                      <motion.div
+                      <motion.section
                         key={item.id}
                         layout
                         initial={{ opacity: 0, y: 20 }}
@@ -247,11 +247,11 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                           alt={item.name} 
                           className="w-20 h-20 rounded-md object-cover"
                         />
-                        <div className="flex-1 min-w-0">
+                        <section className="flex-1 min-w-0">
                           <h3 className="font-medium text-[var(--foreground)]">{item.name}</h3>
                           <p className="text-sm text-[var(--foreground-muted)]">Tamaño: {item.size}</p>
-                          <div className="mt-2 flex items-center justify-between">
-                            <div className="flex items-center space-x-1">
+                          <section className="mt-2 flex items-center justify-between">
+                            <section className="flex items-center space-x-1">
                               <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
@@ -281,12 +281,12 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                               >
                                 <Plus className="h-3 w-3" />
                               </motion.button>
-                            </div>
+                            </section>
                             <p className="font-medium text-[var(--foreground)]">
                               {formatCOP(item.price * item.quantity)}
                             </p>
-                          </div>
-                        </div>
+                          </section>
+                        </section>
                         <motion.button
                           whileHover={{ scale: 1.1, color: 'var(--accent)' }}
                           whileTap={{ scale: 0.9 }}
@@ -295,11 +295,11 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                         >
                           <Trash2 className="h-4 w-4" />
                         </motion.button>
-                      </motion.div>
+                      </motion.section>
                     ))}
-                  </div>
+                  </section>
                   
-                  <div className="flex justify-end">
+                  <section className="flex justify-end">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -313,28 +313,28 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                       <Trash2 className="h-3 w-3" />
                       <span>Vaciar carrito</span>
                     </motion.button>
-                  </div>
-                </div>
+                  </section>
+                </section>
               )}
-            </div>
+            </section>
             
             {cartItems.length > 0 && (
-              <div className="border-t border-[var(--border)] p-6 space-y-4">
+              <section className="border-t border-[var(--border)] p-6 space-y-4">
                 {/* Totals */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-[var(--foreground-muted)]">
+                <section className="space-y-2">
+                  <section className="flex justify-between text-[var(--foreground-muted)]">
                     <span>Subtotal</span>
                     <span>{formatCOP(subtotal)}</span>
-                  </div>
-                  <div className="flex justify-between text-[var(--foreground-muted)]">
+                  </section>
+                  <section className="flex justify-between text-[var(--foreground-muted)]">
                     <span>Envío</span>
                     <span>{formatCOP(deliveryFee)}</span>
-                  </div>
-                  <div className="flex justify-between font-medium text-[var(--foreground)] text-lg pt-2 border-t border-[var(--border)]">
+                  </section>
+                  <section className="flex justify-between font-medium text-[var(--foreground)] text-lg pt-2 border-t border-[var(--border)]">
                     <span>Total</span>
                     <span>{formatCOP(total)}</span>
-                  </div>
-                </div>
+                  </section>
+                </section>
 
                 <motion.button
                   whileHover={{ 
@@ -367,9 +367,9 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
                     </>
                   )}
                 </motion.button>
-              </div>
+              </section>
             )}
-          </motion.div>
+          </motion.section>
         </>
       )}
     </AnimatePresence>

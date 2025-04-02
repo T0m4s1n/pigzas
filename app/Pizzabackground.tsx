@@ -30,7 +30,7 @@ export default function PigzasBackground({
       const left = `${Math.random() * 100}%`;
       
       iconElements.push(
-        <div
+        <section
           key={i}
           className="absolute"
           style={{
@@ -44,7 +44,7 @@ export default function PigzasBackground({
             size={size} 
             className="text-[var(--accent)]" 
           />
-        </div>
+        </section>
       );
     }
     
@@ -54,7 +54,7 @@ export default function PigzasBackground({
   const [iconsToRender] = React.useState(() => generateIcons());
 
   return (
-    <div 
+    <section 
       className={`fixed inset-0 w-full h-full overflow-hidden pointer-events-none ${className}`}
       style={{ 
         zIndex, 
@@ -63,6 +63,6 @@ export default function PigzasBackground({
       aria-hidden="true"
     >
       {iconsToRender}
-    </div>
+    </section>
   );
 }

@@ -41,19 +41,19 @@ export default function AboutUs() {
 
       <PizzaHeader />
       <PigzasBackground />
-      <div className="container mx-auto px-6 py-32 min-h-screen">
-        <motion.div
+      <section className="container mx-auto px-6 py-32 min-h-screen">
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <div className="flex items-center justify-center space-x-4 mb-4">
+          <section className="flex items-center justify-center space-x-4 mb-4">
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <h1 className="font-['Dancing_Script'] font-bold text-4xl text-[var(--foreground)]">
               Sobre Nosotros
             </h1>
-          </div>
+          </section>
           <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
             Nuestra Historia y Pasión
           </h2>
@@ -62,22 +62,22 @@ export default function AboutUs() {
             Desde nuestra apertura en 2010, nos hemos dedicado a crear pizzas artesanales que deleiten 
             y sorprendan a nuestros comensales.
           </p>
-        </motion.div>
+        </motion.section>
 
-        <motion.div
+        <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20 items-center"
         >
-          <div className="relative h-96 overflow-hidden rounded-xl shadow-lg">
+          <section className="relative h-96 overflow-hidden rounded-xl shadow-lg">
             <img
               src="./pizzas.jpg"
               alt="Interior de Pigzas"
               className="w-full h-full object-cover"
             />
-          </div>
-          <div>
+          </section>
+          <section>
             <h3 className="text-3xl font-bold mb-6 text-[var(--foreground)]">Nuestra Historia</h3>
             <p className="text-[var(--foreground-muted)] mb-4 leading-relaxed">
               Todo comenzó con una simple idea: traer la auténtica experiencia de la pizza italiana a nuestra 
@@ -91,10 +91,10 @@ export default function AboutUs() {
               Hoy, nos enorgullece ser reconocidos como uno de los mejores restaurantes de pizza en la ciudad, 
               manteniendo siempre nuestra filosofía de calidad, frescura y servicio excepcional.
             </p>
-          </div>
-        </motion.div>
+          </section>
+        </motion.section>
 
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -103,9 +103,9 @@ export default function AboutUs() {
           <h3 className="text-3xl font-bold mb-10 text-center text-[var(--foreground)]">
             Lo Que Nos Hace Especiales
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {restaurantFeatures.map((feature, index) => (
-              <motion.div
+              <motion.section
                 key={feature.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -117,16 +117,16 @@ export default function AboutUs() {
                 }}
                 className="bg-[var(--card-background)] rounded-xl shadow-md p-6 text-center"
               >
-                <div className="flex justify-center mb-4">
+                <section className="flex justify-center mb-4">
                   {feature.icon}
-                </div>
+                </section>
                 <h4 className="text-xl font-bold mb-3 text-[var(--foreground)]">{feature.title}</h4>
                 <p className="text-[var(--foreground-muted)]">{feature.description}</p>
-              </motion.div>
+              </motion.section>
             ))}
-          </div>
-        </motion.div>
-        <motion.div
+          </section>
+        </motion.section>
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
@@ -135,8 +135,8 @@ export default function AboutUs() {
           <h3 className="text-3xl font-bold mb-10 text-center text-[var(--foreground)]">
             Reconocimientos
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.section
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.9 }}
@@ -145,8 +145,8 @@ export default function AboutUs() {
               <Award className="h-16 w-16 text-[var(--accent)] mb-4" />
               <h4 className="text-xl font-bold mb-2 text-[var(--foreground)]">Mejor Pizza 2023</h4>
               <p className="text-[var(--foreground-muted)]">Galardonados con el premio a la mejor pizza artesanal de la región.</p>
-            </motion.div>
-            <motion.div
+            </motion.section>
+            <motion.section
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 1.0 }}
@@ -155,8 +155,8 @@ export default function AboutUs() {
               <UtensilsCrossed className="h-16 w-16 text-[var(--accent)] mb-4" />
               <h4 className="text-xl font-bold mb-2 text-[var(--foreground)]">Excelencia Culinaria</h4>
               <p className="text-[var(--foreground-muted)]">Reconocidos por la asociación gastronómica por nuestra creatividad y sabor.</p>
-            </motion.div>
-            <motion.div
+            </motion.section>
+            <motion.section
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 1.1 }}
@@ -165,38 +165,38 @@ export default function AboutUs() {
               <Leaf className="h-16 w-16 text-[var(--accent)] mb-4" />
               <h4 className="text-xl font-bold mb-2 text-[var(--foreground)]">Sostenibilidad</h4>
               <p className="text-[var(--foreground-muted)]">Certificación de prácticas sostenibles y uso responsable de ingredientes locales.</p>
-            </motion.div>
-          </div>
-        </motion.div>
+            </motion.section>
+          </section>
+        </motion.section>
 
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.2 }}
           className="bg-[var(--card-background)] rounded-xl shadow-lg p-8 text-center"
         >
           <h3 className="text-3xl font-bold mb-6 text-[var(--foreground)]">Visítanos</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="flex flex-col items-center">
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <section className="flex flex-col items-center">
               <MapPin className="h-10 w-10 text-[var(--accent)] mb-3" />
               <h4 className="text-lg font-bold mb-2 text-[var(--foreground)]">Ubicación</h4>
               <p className="text-[var(--foreground-muted)]">Obonuco city</p>
-            </div>
-            <div className="flex flex-col items-center">
+            </section>
+            <section className="flex flex-col items-center">
               <Clock className="h-10 w-10 text-[var(--accent)] mb-3" />
               <h4 className="text-lg font-bold mb-2 text-[var(--foreground)]">Horario</h4>
               <p className="text-[var(--foreground-muted)]">solo los miercoles</p>
               <p className="text-[var(--foreground-muted)]">de 7 a 10</p>
-            </div>
-            <div className="flex flex-col items-center">
+            </section>
+            <section className="flex flex-col items-center">
               <Phone className="h-10 w-10 text-[var(--accent)] mb-3" />
               <h4 className="text-lg font-bold mb-2 text-[var(--foreground)]">Reservas</h4>
               <p className="text-[var(--foreground-muted)]">numeritonice</p>
               <p className="text-[var(--foreground-muted)]">reservas@pigzas.com</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+            </section>
+          </section>
+        </motion.section>
+      </section>
     </>
   );
 }

@@ -141,29 +141,29 @@ const PizzaDesigner = () => {
         }[size] || "w-64 h-64";
 
         return (
-            <div 
+            <section 
                 className={`${sizeClasses} bg-[var(--card-hover)] rounded-full mx-auto relative overflow-hidden border-4 border-[var(--brass-600)]`}
                 style={{ maxWidth: size === "lg" ? "400px" : undefined }}
             >
                 {/* Pizza crust (outer edge) */}
-                <div className="absolute inset-2 rounded-full" 
+                <section className="absolute inset-2 rounded-full" 
                     style={{ 
                         backgroundColor: crustStyle.crustColor,
                         inset: `${dimensions.outerInset}px`
                     }}
-                ></div>
+                ></section>
                 
                 {/* Pizza base (cheese) */}
-                <div className="absolute rounded-full" 
+                <section className="absolute rounded-full" 
                     style={{ 
                         backgroundColor: bakingColor.baseColor,
                         inset: `${dimensions.innerInset}px` 
                     }}
-                ></div>
+                ></section>
                 
                 {/* Divider for half and half pizza */}
                 {twoFlavors && (
-                    <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-[var(--brass-600)] transform -translate-x-1/2 z-10"></div>
+                    <section className="absolute top-0 bottom-0 left-1/2 w-1 bg-[var(--brass-600)] transform -translate-x-1/2 z-10"></section>
                 )}
 
                 {/* Render toppings if showing them */}
@@ -201,7 +201,7 @@ const PizzaDesigner = () => {
                         const sizePx = baseSize * (dimensions.scale || 1);
                         
                         return (
-                            <motion.div
+                            <motion.section
                                 key={`${topping.id}-${toppingIndex}-${instanceIndex}`}
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
@@ -224,7 +224,7 @@ const PizzaDesigner = () => {
                                         transform: topping.id === 'pineapple' ? 'rotate(45deg)' : 'none'
                                     }}
                                 />
-                            </motion.div>
+                            </motion.section>
                         );
                     }).filter(Boolean); 
                 })}
@@ -232,49 +232,49 @@ const PizzaDesigner = () => {
                 {showCutStyle && cutStyle && (
                     <>
                         {cutStyle === 'traditional' && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-full h-0.5 bg-white opacity-70"></div>
-                                <div className="h-full w-0.5 bg-white opacity-70"></div>
-                                <div className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></div>
-                                <div className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></div>
-                            </div>
+                            <section className="absolute inset-0 flex items-center justify-center">
+                                <section className="w-full h-0.5 bg-white opacity-70"></section>
+                                <section className="h-full w-0.5 bg-white opacity-70"></section>
+                                <section className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></section>
+                                <section className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></section>
+                            </section>
                         )}
                         
                         {cutStyle === 'square' && (
-                            <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                            </div>
+                            <section className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                            </section>
                         )}
                         
                         {cutStyle === 'strips' && (
-                            <div className="absolute inset-0 flex flex-col">
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1"></div>
-                            </div>
+                            <section className="absolute inset-0 flex flex-col">
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1"></section>
+                            </section>
                         )}
                         
                         {cutStyle === 'uncut' && (
-                            <div className="absolute inset-0 flex items-center justify-center">
+                            <section className="absolute inset-0 flex items-center justify-center">
                                 <Scissors className="h-12 w-12 text-white opacity-70" style={{ transform: 'rotate(45deg)' }} />
-                                <div className="absolute h-12 w-12 flex items-center justify-center">
-                                    <div className="h-full w-0.5 bg-white rotate-45"></div>
-                                </div>
-                            </div>
+                                <section className="absolute h-12 w-12 flex items-center justify-center">
+                                    <section className="h-full w-0.5 bg-white rotate-45"></section>
+                                </section>
+                            </section>
                         )}
                     </>
                 )}
-            </div>
+            </section>
         );
     };
 
@@ -282,17 +282,17 @@ const PizzaDesigner = () => {
         switch(currentStep) {
             case 1:
                 return (
-                    <div className="flex flex-col lg:flex-row gap-8 items-center">
-                        <div className="lg:w-2/5 flex justify-center">
+                    <section className="flex flex-col lg:flex-row gap-8 items-center">
+                        <section className="lg:w-2/5 flex justify-center">
                             <PizzaVisualization showToppings={false} size="lg" />
-                        </div>
+                        </section>
                         
-                        <div className="lg:w-3/5 space-y-8">
-                            <div className="space-y-4">
+                        <section className="lg:w-3/5 space-y-8">
+                            <section className="space-y-4">
                                 <h3 className="text-xl font-semibold text-[var(--foreground)]">1. Selecciona el tamaño</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 {sizeOptions.map(size => (
-                                    <motion.div
+                                    <motion.section
                                     key={size.id}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -304,26 +304,26 @@ const PizzaDesigner = () => {
                                         'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
                                     `}
                                     >
-                                    <div className="flex justify-center mb-2">
+                                    <section className="flex justify-center mb-2">
                                         <Pizza 
                                         className={`h-10 w-10 ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`} 
                                         style={{ transform: `scale(${0.7 + sizeOptions.findIndex(s => s.id === size.id) * 0.1})` }} 
                                         />
-                                    </div>
-                                    <div className="font-semibold">{size.name}</div>
-                                    <div className={`text-sm ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                    </section>
+                                    <section className="font-semibold">{size.name}</section>
+                                    <section className={`text-sm ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`}>
                                         {size.slices} rebanadas
-                                    </div>
-                                    </motion.div>
+                                    </section>
+                                    </motion.section>
                                 ))}
-                                </div>
-                            </div>
+                                </section>
+                            </section>
                             
-                            <div className="space-y-4">
+                            <section className="space-y-4">
                                 <h3 className="text-xl font-semibold text-[var(--foreground)]">2. Tipo de masa</h3>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 {crustOptions.map(crust => (
-                                    <motion.div
+                                    <motion.section
                                     key={crust.id}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -335,20 +335,20 @@ const PizzaDesigner = () => {
                                         'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
                                     `}
                                     >
-                                    <div className="font-semibold">{crust.name}</div>
+                                    <section className="font-semibold">{crust.name}</section>
                                     {crust.price > 0 && 
-                                        <div className={`text-sm ${pizzaCrust === crust.id ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                        <section className={`text-sm ${pizzaCrust === crust.id ? 'text-white' : 'text-[var(--accent)]'}`}>
                                         +${crust.price}
-                                        </div>
+                                        </section>
                                     }
-                                    </motion.div>
+                                    </motion.section>
                                 ))}
-                                </div>
-                            </div>
+                                </section>
+                            </section>
                             
-                            <div className="space-y-4">
+                            <section className="space-y-4">
                                 <h3 className="text-xl font-semibold text-[var(--foreground)]">3. ¿Mitad y mitad?</h3>
-                                <div className="flex space-x-4">
+                                <section className="flex space-x-4">
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -375,31 +375,31 @@ const PizzaDesigner = () => {
                                 >
                                     Mitad y mitad (+$2000)
                                 </motion.button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
                 );
             case 2:
                 // New case for ingredients selection
                 return (
-                    <div className="flex flex-col lg:flex-row gap-8 items-center">
-                        <div className="lg:w-2/5 flex justify-center">
+                    <section className="flex flex-col lg:flex-row gap-8 items-center">
+                        <section className="lg:w-2/5 flex justify-center">
                             <PizzaVisualization showToppings={true} size="lg" selectedToppings={selectedIngredients} pizzaCrust={pizzaCrust} />
-                        </div>
+                        </section>
                         
-                        <div className="lg:w-3/5 space-y-8">
-                            <div className="space-y-4">
+                        <section className="lg:w-3/5 space-y-8">
+                            <section className="space-y-4">
                                 <h3 className="text-xl font-semibold text-[var(--foreground)]">Selecciona los ingredientes</h3>
                                 
                                 {/* Categorized toppings display */}
-                                <div className="space-y-6">
+                                <section className="space-y-6">
                                     {/* Cheese section */}
-                                    <div>
+                                    <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Quesos</h4>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                             {toppings.filter(t => t.category === 'cheese').map(topping => (
-                                                <motion.div
+                                                <motion.section
                                                     key={topping.id}
                                                     whileHover={{ scale: 1.05 }}
                                                     whileTap={{ scale: 0.95 }}
@@ -411,33 +411,33 @@ const PizzaDesigner = () => {
                                                             'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
                                                     `}
                                                 >
-                                                    <div className="flex items-center">
-                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                    <section className="flex items-center">
+                                                        <section className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
                                                             {selectedIngredients.some(i => i.id === topping.id) ?
                                                                 <Check className="h-4 w-4 text-[var(--accent)]" /> :
                                                                 <span className="h-4 w-4" />
                                                             }
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                        </section>
+                                                        <section>
+                                                            <section className="font-medium text-sm">{topping.name}</section>
                                                             {topping.price > 0 &&
-                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                <section className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
                                                                     +${topping.price}
-                                                                </div>
+                                                                </section>
                                                             }
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
+                                                        </section>
+                                                    </section>
+                                                </motion.section>
                                             ))}
-                                        </div>
-                                    </div>
+                                        </section>
+                                    </section>
                                     
                                     {/* Meats section */}
-                                    <div>
+                                    <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Carnes</h4>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                             {toppings.filter(t => t.category === 'meat').map(topping => (
-                                                <motion.div
+                                                <motion.section
                                                     key={topping.id}
                                                     whileHover={{ scale: 1.05 }}
                                                     whileTap={{ scale: 0.95 }}
@@ -449,33 +449,33 @@ const PizzaDesigner = () => {
                                                             'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
                                                     `}
                                                 >
-                                                    <div className="flex items-center">
-                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                    <section className="flex items-center">
+                                                        <section className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
                                                             {selectedIngredients.some(i => i.id === topping.id) ?
                                                                 <Check className="h-4 w-4 text-[var(--accent)]" /> :
                                                                 <span className="h-4 w-4" />
                                                             }
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                        </section>
+                                                        <section>
+                                                            <section className="font-medium text-sm">{topping.name}</section>
                                                             {topping.price > 0 &&
-                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                <section className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
                                                                     +${topping.price}
-                                                                </div>
+                                                                </section>
                                                             }
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
+                                                        </section>
+                                                    </section>
+                                                </motion.section>
                                             ))}
-                                        </div>
-                                    </div>
+                                        </section>
+                                    </section>
                                     
                                     {/* Vegetables section */}
-                                    <div>
+                                    <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Vegetales</h4>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                             {toppings.filter(t => t.category === 'veggie').map(topping => (
-                                                <motion.div
+                                                <motion.section
                                                     key={topping.id}
                                                     whileHover={{ scale: 1.05 }}
                                                     whileTap={{ scale: 0.95 }}
@@ -487,33 +487,33 @@ const PizzaDesigner = () => {
                                                             'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
                                                     `}
                                                 >
-                                                    <div className="flex items-center">
-                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                    <section className="flex items-center">
+                                                        <section className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
                                                             {selectedIngredients.some(i => i.id === topping.id) ?
                                                                 <Check className="h-4 w-4 text-[var(--accent)]" /> :
                                                                 <span className="h-4 w-4" />
                                                             }
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                        </section>
+                                                        <section>
+                                                            <section className="font-medium text-sm">{topping.name}</section>
                                                             {topping.price > 0 &&
-                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                <section className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
                                                                     +${topping.price}
-                                                                </div>
+                                                                </section>
                                                             }
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
+                                                        </section>
+                                                    </section>
+                                                </motion.section>
                                             ))}
-                                        </div>
-                                    </div>
-                                </div>
+                                        </section>
+                                    </section>
+                                </section>
                                 
                                 {/* Selected ingredients summary */}
-                                <div className="mt-6 p-4 bg-[var(--card-hover)] rounded-lg">
+                                <section className="mt-6 p-4 bg-[var(--card-hover)] rounded-lg">
                                     <h4 className="font-medium text-[var(--foreground)] mb-2">Ingredientes seleccionados:</h4>
                                     {selectedIngredients.length > 0 ? (
-                                        <div className="flex flex-wrap gap-2">
+                                        <section className="flex flex-wrap gap-2">
                                             {selectedIngredients.map(ingredient => (
                                                 <span 
                                                     key={ingredient.id}
@@ -531,30 +531,30 @@ const PizzaDesigner = () => {
                                                     </button>
                                                 </span>
                                             ))}
-                                        </div>
+                                        </section>
                                     ) : (
                                         <p className="text-[var(--foreground-muted)] text-sm">Ningún ingrediente seleccionado todavía</p>
                                     )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </section>
+                            </section>
+                        </section>
+                    </section>
                 );
             case 3:
                 return (
-                    <div className="space-y-8">
+                    <section className="space-y-8">
                     <h3 className="text-xl font-semibold text-[var(--foreground)]">Tiempo de horneado</h3>
                     
-                    <div className="max-w-xl mx-auto text-center space-y-6">
-                        <div className="flex items-center justify-center">
+                    <section className="max-w-xl mx-auto text-center space-y-6">
+                        <section className="flex items-center justify-center">
                         <Clock className="h-16 w-16 text-[var(--accent)]" />
-                        </div>
+                        </section>
                         
                         <p className="text-lg text-[var(--foreground)]">
                         Elige cuánto tiempo quieres que horneemos tu pizza:
                         </p>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -566,11 +566,11 @@ const PizzaDesigner = () => {
                                 'bg-[var(--card-hover)] text-[var(--foreground)]'}
                             `}
                         >
-                            <div className="font-medium text-lg">Suave</div>
-                            <div className="text-base">10 minutos</div>
-                            <div className="mt-2 text-sm">
+                            <section className="font-medium text-lg">Suave</section>
+                            <section className="text-base">10 minutos</section>
+                            <section className="mt-2 text-sm">
                             {bakingTime === 10 ? 'Seleccionado' : 'Masa más suave'}
-                            </div>
+                            </section>
                         </motion.button>
                         
                         <motion.button
@@ -584,11 +584,11 @@ const PizzaDesigner = () => {
                                 'bg-[var(--card-hover)] text-[var(--foreground)]'}
                             `}
                         >
-                            <div className="font-medium text-lg">Clásica</div>
-                            <div className="text-base">15 minutos</div>
-                            <div className="mt-2 text-sm">
+                            <section className="font-medium text-lg">Clásica</section>
+                            <section className="text-base">15 minutos</section>
+                            <section className="mt-2 text-sm">
                             {bakingTime === 15 ? 'Seleccionado' : 'Punto perfecto'}
-                            </div>
+                            </section>
                         </motion.button>
                         
                         <motion.button
@@ -602,15 +602,15 @@ const PizzaDesigner = () => {
                                 'bg-[var(--card-hover)] text-[var(--foreground)]'}
                             `}
                         >
-                            <div className="font-medium text-lg">Crujiente</div>
-                            <div className="text-base">20 minutos</div>
-                            <div className="mt-2 text-sm">
+                            <section className="font-medium text-lg">Crujiente</section>
+                            <section className="text-base">20 minutos</section>
+                            <section className="mt-2 text-sm">
                             {bakingTime === 20 ? 'Seleccionado' : 'Extra crujiente'}
-                            </div>
+                            </section>
                         </motion.button>
-                        </div>
+                        </section>
                         
-                        <div className="mt-6 text-left p-4 bg-[var(--card-hover)] rounded-lg">
+                        <section className="mt-6 text-left p-4 bg-[var(--card-hover)] rounded-lg">
                         <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
                         <p className="text-sm text-[var(--foreground-muted)]">
                             <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
@@ -621,18 +621,18 @@ const PizzaDesigner = () => {
                             'Sin ingredientes adicionales'
                             }
                         </p>
-                        </div>
-                    </div>
-                    </div>
+                        </section>
+                    </section>
+                    </section>
                 );
             case 4:
                 return (
-                    <div className="space-y-8">
+                    <section className="space-y-8">
                     <h3 className="text-xl font-semibold text-[var(--foreground)]">Estilo de corte</h3>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                         {cutStyles.map(style => (
-                        <motion.div
+                        <motion.section
                             key={style.id}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -644,55 +644,55 @@ const PizzaDesigner = () => {
                                 'bg-[var(--card-hover)] text-[var(--foreground)]'}
                             `}
                         >
-                            <div className="relative h-32 w-32 bg-[#E63946] rounded-full mx-auto mb-3 overflow-hidden border-2 border-[#F9C784]">
+                            <section className="relative h-32 w-32 bg-[#E63946] rounded-full mx-auto mb-3 overflow-hidden border-2 border-[#F9C784]">
                             {style.id === 'traditional' && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-full h-0.5 bg-white opacity-70"></div>
-                                <div className="h-full w-0.5 bg-white opacity-70"></div>
-                                <div className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></div>
-                                <div className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></div>
-                                </div>
+                                <section className="absolute inset-0 flex items-center justify-center">
+                                <section className="w-full h-0.5 bg-white opacity-70"></section>
+                                <section className="h-full w-0.5 bg-white opacity-70"></section>
+                                <section className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></section>
+                                <section className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></section>
+                                </section>
                             )}
                             
                             {style.id === 'square' && (
-                                <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                <div className="border border-white opacity-70"></div>
-                                </div>
+                                <section className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                <section className="border border-white opacity-70"></section>
+                                </section>
                             )}
                             
                             {style.id === 'strips' && (
-                                <div className="absolute inset-0 flex flex-col">
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1 border-b border-white opacity-70"></div>
-                                <div className="flex-1"></div>
-                                </div>
+                                <section className="absolute inset-0 flex flex-col">
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1 border-b border-white opacity-70"></section>
+                                <section className="flex-1"></section>
+                                </section>
                             )}
                             
                             {style.id === 'uncut' && (
-                                <div className="absolute inset-0 flex items-center justify-center">
+                                <section className="absolute inset-0 flex items-center justify-center">
                                 <Scissors className="h-12 w-12 text-white opacity-70" style={{ transform: 'rotate(45deg)' }} />
-                                <div className="absolute h-12 w-12 flex items-center justify-center">
-                                    <div className="h-full w-0.5 bg-white rotate-45"></div>
-                                </div>
-                                </div>
+                                <section className="absolute h-12 w-12 flex items-center justify-center">
+                                    <section className="h-full w-0.5 bg-white rotate-45"></section>
+                                </section>
+                                </section>
                             )}
-                            </div>
-                            <div className="font-semibold text-lg">{style.name}</div>
-                        </motion.div>
+                            </section>
+                            <section className="font-semibold text-lg">{style.name}</section>
+                        </motion.section>
                         ))}
-                    </div>
+                    </section>
                     
-                    <div className="mt-8 p-4 bg-[var(--card-hover)] rounded-lg">
+                    <section className="mt-8 p-4 bg-[var(--card-hover)] rounded-lg">
                         <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
                         <p className="text-sm text-[var(--foreground-muted)]">
                         <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
@@ -704,8 +704,8 @@ const PizzaDesigner = () => {
                             'Sin ingredientes adicionales'
                         }
                         </p>
-                    </div>
-                    </div>
+                    </section>
+                    </section>
                 );
       case 5: 
           // Calcular precio total basado en todas las selecciones
@@ -726,18 +726,18 @@ const PizzaDesigner = () => {
           const totalPrice = calculateTotalPrice();
           
           return (
-              <div className="space-y-8">
+              <section className="space-y-8">
               <h3 className="text-xl font-semibold text-[var(--foreground)]">Revisa tu pizza personalizada</h3>
               
-              <div className="bg-[var(--card-hover)] rounded-xl p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                  <div className="md:w-1/2">
-                      <div className="w-full aspect-square bg-[var(--card-background)] rounded-full mx-auto relative overflow-hidden border-4 border-[var(--brass-600)]"
+              <section className="bg-[var(--card-hover)] rounded-xl p-6">
+                  <section className="flex flex-col md:flex-row gap-6">
+                  <section className="md:w-1/2">
+                      <section className="w-full aspect-square bg-[var(--card-background)] rounded-full mx-auto relative overflow-hidden border-4 border-[var(--brass-600)]"
                           style={{ maxWidth: '300px' }}>
-                      <div className="absolute inset-2 rounded-full bg-[#F9C784]"></div>
-                      <div className="absolute inset-8 rounded-full bg-[#E63946]"></div>
+                      <section className="absolute inset-2 rounded-full bg-[#F9C784]"></section>
+                      <section className="absolute inset-8 rounded-full bg-[#E63946]"></section>
                       {twoFlavors && (
-                          <div className="absolute top-0 bottom-0 left-1/2 w-2 bg-[var(--brass-600)] transform -translate-x-1/2] z-10"></div>
+                          <section className="absolute top-0 bottom-0 left-1/2 w-2 bg-[var(--brass-600)] transform -translate-x-1/2] z-10"></section>
                       )}
                       {selectedIngredients.map((ingredient, index) => {
                           // Similar layout calculation as in the design step
@@ -749,7 +749,7 @@ const PizzaDesigner = () => {
                           const rotation = Math.random() * 360;
                           
                           return (
-                          <div
+                          <section
                               key={`${ingredient.id}-${index}`}
                               className="absolute w-8 h-8 bg-[var(--accent)] rounded-full opacity-80"
                               style={{
@@ -758,95 +758,95 @@ const PizzaDesigner = () => {
                               transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
                               zIndex: 5 + index
                               }}
-                          ></div>
+                          ></section>
                           );
                       })}
 
                       {cutStyle === 'traditional' && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-full h-0.5 bg-white opacity-60"></div>
-                          <div className="h-full w-0.5 bg-white opacity-60"></div>
-                          <div className="w-3/4 h-0.5 bg-white opacity-60 rotate-45 absolute"></div>
-                          <div className="w-3/4 h-0.5 bg-white opacity-60 -rotate-45 absolute"></div>
-                          </div>
+                          <section className="absolute inset-0 flex items-center justify-center">
+                          <section className="w-full h-0.5 bg-white opacity-60"></section>
+                          <section className="h-full w-0.5 bg-white opacity-60"></section>
+                          <section className="w-3/4 h-0.5 bg-white opacity-60 rotate-45 absolute"></section>
+                          <section className="w-3/4 h-0.5 bg-white opacity-60 -rotate-45 absolute"></section>
+                          </section>
                       )}
                       
                       {cutStyle === 'square' && (
-                          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          <div className="border border-white opacity-60"></div>
-                          </div>
+                          <section className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          <section className="border border-white opacity-60"></section>
+                          </section>
                       )}
                       
                       {cutStyle === 'strips' && (
-                          <div className="absolute inset-0 flex flex-col">
-                          <div className="flex-1 border-b border-white opacity-60"></div>
-                          <div className="flex-1 border-b border-white opacity-60"></div>
-                          <div className="flex-1 border-b border-white opacity-60"></div>
-                          <div className="flex-1 border-b border-white opacity-60"></div>
-                          <div className="flex-1"></div>
-                          </div>
+                          <section className="absolute inset-0 flex flex-col">
+                          <section className="flex-1 border-b border-white opacity-60"></section>
+                          <section className="flex-1 border-b border-white opacity-60"></section>
+                          <section className="flex-1 border-b border-white opacity-60"></section>
+                          <section className="flex-1 border-b border-white opacity-60"></section>
+                          <section className="flex-1"></section>
+                          </section>
                       )}
-                      </div>
-                  </div>
+                      </section>
+                  </section>
                   
-                  <div className="md:w-1/2 space-y-4">
+                  <section className="md:w-1/2 space-y-4">
                       <h4 className="font-bold text-lg text-[var(--foreground)]">Detalles de tu pizza</h4>
                       
-                      <div className="space-y-2">
-                      <div className="flex justify-between">
+                      <section className="space-y-2">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Tamaño:</span>
                           <span className="font-medium text-[var(--foreground)]">
                           {sizeOptions.find(size => size.id === pizzaSize)?.name || 'Desconocido'}
                           </span>
-                      </div>
+                      </section>
                       
-                      <div className="flex justify-between">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Masa:</span>
                           <span className="font-medium text-[var(--foreground)]">
                           {crustOptions.find(crust => crust.id === pizzaCrust)?.name || 'Desconocido'}
                           </span>
-                      </div>
+                      </section>
                       
-                      <div className="flex justify-between">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Estilo:</span>
                           <span className="font-medium text-[var(--foreground)]">
                           {twoFlavors ? 'Mitad y mitad' : 'Una sola'}
                           </span>
-                      </div>
+                      </section>
                       
-                      <div className="flex justify-between">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Tiempo de horneado:</span>
                           <span className="font-medium text-[var(--foreground)]">{bakingTime} minutos</span>
-                      </div>
+                      </section>
                       
-                      <div className="flex justify-between">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Corte:</span>
                           <span className="font-medium text-[var(--foreground)]">
                           {cutStyles.find(style => style.id === cutStyle)?.name || 'Desconocido'}
                           </span>
-                      </div>
+                      </section>
                       
-                      <div className="flex justify-between">
+                      <section className="flex justify-between">
                           <span className="text-[var(--foreground-muted)]">Rebanadas:</span>
                           <span className="font-medium text-[var(--foreground)]">
                           {sizeOptions.find(size => size.id === pizzaSize)?.slices || '8'} rebanadas
                           </span>
-                      </div>
-                      </div>
+                      </section>
+                      </section>
                       
-                      <div className="pt-4 border-t border-[var(--card-background)]">
+                      <section className="pt-4 border-t border-[var(--card-background)]">
                       <h4 className="font-medium text-[var(--foreground)] mb-2">Ingredientes:</h4>
                       
                       {selectedIngredients.length > 0 ? (
-                          <div className="flex flex-wrap gap-2">
+                          <section className="flex flex-wrap gap-2">
                           {selectedIngredients.map(ingredient => (
                               <span 
                               key={ingredient.id}
@@ -855,22 +855,22 @@ const PizzaDesigner = () => {
                               {ingredient.name}
                               </span>
                           ))}
-                          </div>
+                          </section>
                       ) : (
                           <p className="text-[var(--foreground-muted)] text-sm">Sin ingredientes adicionales</p>
                       )}
-                      </div>
+                      </section>
                       
-                      <div className="pt-4 border-t border-[var(--card-background)]">
-                      <div className="flex justify-between items-center">
+                      <section className="pt-4 border-t border-[var(--card-background)]">
+                      <section className="flex justify-between items-center">
                           <span className="text-lg font-bold text-[var(--foreground)]">Precio Total:</span>
                           <span className="text-2xl font-bold text-[var(--accent)]">${totalPrice}</span>
-                      </div>
-                      </div>
-                  </div>
-                  </div>
-              </div>
-              </div>
+                      </section>
+                      </section>
+                  </section>
+                  </section>
+              </section>
+              </section>
           );
       default:
           return null;
@@ -890,36 +890,36 @@ const PizzaDesigner = () => {
 
         <PizzaHeader/>
         <PigzasBackground />
-      <div className="container mx-auto px-6 py-32 min-h-screen">
-        <motion.div
+      <section className="container mx-auto px-6 py-32 min-h-screen">
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="flex items-center justify-center space-x-4 mb-4">
+          <section className="flex items-center justify-center space-x-4 mb-4">
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <h1 className="font-['Dancing_Script'] font-bold text-4xl text-[var(--foreground)]">
               Diseña Tu Pizza
             </h1>
-          </div>
+          </section>
           <p className="text-lg max-w-2xl mx-auto leading-relaxed">
             Crea la pizza de tus sueños seleccionando el tamaño, la masa, los ingredientes y más.
           </p>
-        </motion.div>
+        </motion.section>
 
-        <div className="mb-12">
-          <div className="flex justify-between items-center max-w-3xl mx-auto">
+        <section className="mb-12">
+          <section className="flex justify-between items-center max-w-3xl mx-auto">
             {[1, 2, 3, 4, 5].map((step) => (
               <React.Fragment key={step}>
                 {step > 1 && (
-                  <div 
+                  <section 
                     className={`flex-1 h-1 ${
                       step <= currentStep ? 'bg-[var(--brass-500)]' : 'bg-[var(--card-hover)]'
                     }`}
-                  ></div>
+                  ></section>
                 )}
-                <div 
+                <section 
                   className={`
                     w-10 h-10 rounded-full flex items-center justify-center border-2 cursor-pointer
                     ${step <= currentStep ? 'bg-[var(--brass-500)] text-white' : 'bg-[var(--card-hover)] text-[var(--foreground-muted)]'}
@@ -931,24 +931,24 @@ const PizzaDesigner = () => {
                   ) : (
                     <span className="font-semibold">{step}</span>
                   )}
-                </div>
+                </section>
               </React.Fragment>
             ))}
-          </div>
+          </section>
           
-          <div className="flex justify-between max-w-3xl mx-auto mt-2 text-sm text-[var(--foreground-muted)]">
-            <div className="text-center w-10">Base</div>
-            <div className="text-center w-10">Toppings</div>
-            <div className="text-center w-10">Horneado</div>
-            <div className="text-center w-10">Corte</div>
-            <div className="text-center w-10">Final</div>
-          </div>
-        </div>
-        <div className="mb-12">
+          <section className="flex justify-between max-w-3xl mx-auto mt-2 text-sm text-[var(--foreground-muted)]">
+            <section className="text-center w-10">Base</section>
+            <section className="text-center w-10">Toppings</section>
+            <section className="text-center w-10">Horneado</section>
+            <section className="text-center w-10">Corte</section>
+            <section className="text-center w-10">Final</section>
+          </section>
+        </section>
+        <section className="mb-12">
           {renderStepContent()}
-        </div>
+        </section>
 
-        <div className="flex justify-between mt-8">
+        <section className="flex justify-between mt-8">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -1006,19 +1006,19 @@ const PizzaDesigner = () => {
               <span>NO DISPONIBLE</span>
             </motion.button>
           )}
-        </div>
+        </section>
         
-        <div className="fixed bottom-6 right-6">
-          <motion.div
+        <section className="fixed bottom-6 right-6">
+          <motion.section
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="bg-[var(--brass-500)] text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2"
           >
             <ShoppingBag className="h-5 w-5" />
             <span className="font-bold">${price}</span>
-          </motion.div>
-        </div>
-      </div>
+          </motion.section>
+        </section>
+      </section>
     </>
   );
 };

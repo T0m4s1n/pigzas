@@ -208,26 +208,26 @@ const Payment = () => {
   // Show loading or error state if needed
   if (!isClient) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
-        <div className="p-8 text-center">
+      <section className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+        <section className="p-8 text-center">
           <p className="text-[var(--foreground-muted)]">Cargando...</p>
-        </div>
-      </div>
+        </section>
+      </section>
     );
   }
   
   if (!orderDetails) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
-        <div className="animate-pulse p-8 text-center">
+      <section className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+        <section className="animate-pulse p-8 text-center">
           <p className="text-[var(--foreground-muted)]">Cargando detalles del pedido...</p>
-        </div>
-      </div>
+        </section>
+      </section>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <section className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <PigzasBackground/>
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
@@ -238,90 +238,90 @@ const Payment = () => {
         }
       `}</style>
       
-      <div className="max-w-4xl mx-auto p-4 sm:p-6">
-        <div className="mb-8 flex items-center">
+      <section className="max-w-4xl mx-auto p-4 sm:p-6">
+        <section className="mb-8 flex items-center">
           <Link href="/Menu" className="mr-4">
-            <motion.div
+            <motion.section
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="p-2 rounded-full bg-[var(--card-background)]"
             >
               <ArrowLeft className="h-5 w-5" />
-            </motion.div>
+            </motion.section>
           </Link>
           <h1 className="text-2xl font-bold flex items-center font-['Dancing_Script']">
             <CreditCard className="mr-2 h-6 w-6 text-[var(--accent)]" />
             Pago
           </h1>
-        </div>
+        </section>
         
         <AnimatePresence mode="wait">
           {paymentStatus === 'success' ? (
-            <motion.div
+            <motion.section
               key="success"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col items-center justify-center py-12 text-center space-y-6"
             >
-              <motion.div
+              <motion.section
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
               >
                 <CheckCircle className="h-20 w-20 text-green-500" />
-              </motion.div>
+              </motion.section>
               
               <h2 className="text-2xl font-bold font-['Dancing_Script']">¡Pago Completado!</h2>
               <p className="text-[var(--foreground-muted)] max-w-md">
                 ¡Felicidades! Tu pedido ha sido procesado correctamente. Puedes acercarte a nuestro local para recoger tu pizza presentando este comprobante.
               </p>
               
-              <div className="mt-4 p-4 bg-[var(--card-background)] rounded-lg w-full max-w-md">
-                <div className="flex justify-between items-center mb-4">
+              <section className="mt-4 p-4 bg-[var(--card-background)] rounded-lg w-full max-w-md">
+                <section className="flex justify-between items-center mb-4">
                   <p className="font-bold text-lg">Comprobante de Pedido</p>
                   <p className="text-[var(--foreground-muted)] text-sm">{new Date().toLocaleDateString()}</p>
-                </div>
+                </section>
                 
                 <p className="text-[var(--foreground-muted)] text-sm">ID de Pedido</p>
                 <p className="font-mono font-medium">{orderDetails.orderId}</p>
                 
-                <div className="mt-4 pt-2 border-t border-[var(--border)]">
-                  <div className="flex items-center text-[var(--foreground-muted)] my-2">
+                <section className="mt-4 pt-2 border-t border-[var(--border)]">
+                  <section className="flex items-center text-[var(--foreground-muted)] my-2">
                     <MapPin className="h-4 w-4 mr-2" />
                     <p className="text-sm">Recoger en tienda</p>
-                  </div>
+                  </section>
                   
                   <h3 className="font-medium mt-3 mb-2">Productos:</h3>
                   {orderDetails.items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm py-1">
+                    <section key={item.id} className="flex justify-between text-sm py-1">
                       <span>{item.quantity}x {item.name} ({item.size})</span>
                       <span>{formatCOP(item.price * item.quantity)}</span>
-                    </div>
+                    </section>
                   ))}
                   
-                  <div className="mt-2 pt-2 border-t border-[var(--border)]">
-                    <div className="flex justify-between text-[var(--foreground-muted)]">
+                  <section className="mt-2 pt-2 border-t border-[var(--border)]">
+                    <section className="flex justify-between text-[var(--foreground-muted)]">
                       <span>Subtotal</span>
                       <span>{formatCOP(orderDetails.subtotal)}</span>
-                    </div>
+                    </section>
                     
-                    <div className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)] mt-2">
+                    <section className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)] mt-2">
                       <span>Total</span>
                       <span>{formatCOP(orderDetails.total)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    </section>
+                  </section>
+                </section>
+              </section>
               
-              <motion.div 
+              <motion.section 
                 className="mt-6 text-xl font-medium text-[var(--accent)]"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
                 ¡Tu pizza te estará esperando en nuestro local! Gracias por tu compra.
-              </motion.div>
+              </motion.section>
               
               <Link href="/Menu">
                 <motion.button
@@ -340,22 +340,22 @@ const Payment = () => {
                   <span>Volver al Menú</span>
                 </motion.button>
               </Link>
-            </motion.div>
+            </motion.section>
           ) : paymentStatus === 'error' ? (
-            <motion.div
+            <motion.section
               key="error"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col items-center justify-center py-12 text-center space-y-6"
             >
-              <motion.div
+              <motion.section
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
               >
                 <AlertCircle className="h-20 w-20 text-red-500" />
-              </motion.div>
+              </motion.section>
               
               <h2 className="text-2xl font-bold font-['Dancing_Script']">Error de Pago</h2>
               <p className="text-[var(--foreground-muted)] max-w-md">
@@ -376,67 +376,67 @@ const Payment = () => {
               >
                 Intentar de nuevo
               </motion.button>
-            </motion.div>
+            </motion.section>
           ) : (
-            <motion.div
+            <motion.section
               key="checkout"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className="grid grid-cols-1 lg:grid-cols-3 gap-8"
             >
-              <div className="lg:col-span-1 order-2 lg:order-1">
-                <div className="bg-[var(--card-background)] rounded-lg p-6 shadow-md sticky top-6">
+              <section className="lg:col-span-1 order-2 lg:order-1">
+                <section className="bg-[var(--card-background)] rounded-lg p-6 shadow-md sticky top-6">
                   <h2 className="text-xl font-bold mb-4 pb-2 border-b border-[var(--border)] font-['Dancing_Script']">
                     Resumen del Pedido
                   </h2>
                   
-                  <div className="flex items-center mb-4 text-[var(--foreground-muted)]">
+                  <section className="flex items-center mb-4 text-[var(--foreground-muted)]">
                     <MapPin className="h-5 w-5 mr-2" />
                     <p>Recoger en tienda</p>
-                  </div>
+                  </section>
                   
-                  <div className="space-y-4 mb-4">
+                  <section className="space-y-4 mb-4">
                     {orderDetails.items.map((item) => (
-                      <div key={item.id} className="flex items-center space-x-3">
+                      <section key={item.id} className="flex items-center space-x-3">
                         <img 
                           src={item.image} 
                           alt={item.name} 
                           className="w-12 h-12 rounded-md object-cover"
                         />
-                        <div className="flex-1">
+                        <section className="flex-1">
                           <p className="font-medium">{item.name}</p>
-                          <div className="flex justify-between text-sm text-[var(--foreground-muted)]">
+                          <section className="flex justify-between text-sm text-[var(--foreground-muted)]">
                             <span>{item.quantity}x · {item.size}</span>
                             <span>{formatCOP(item.price * item.quantity)}</span>
-                          </div>
-                        </div>
-                      </div>
+                          </section>
+                        </section>
+                      </section>
                     ))}
-                  </div>
+                  </section>
                   
-                  <div className="pt-4 border-t border-[var(--border)] space-y-2">
-                    <div className="flex justify-between text-[var(--foreground-muted)]">
+                  <section className="pt-4 border-t border-[var(--border)] space-y-2">
+                    <section className="flex justify-between text-[var(--foreground-muted)]">
                       <span>Subtotal</span>
                       <span>{formatCOP(orderDetails.subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)]">
+                    </section>
+                    <section className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)]">
                       <span>Total</span>
                       <span>{formatCOP(orderDetails.total)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    </section>
+                  </section>
+                </section>
+              </section>
               
-              <div className="lg:col-span-2 order-1 lg:order-2">
-                <div className="bg-[var(--card-background)] rounded-lg p-6 shadow-md">
+              <section className="lg:col-span-2 order-1 lg:order-2">
+                <section className="bg-[var(--card-background)] rounded-lg p-6 shadow-md">
                   <h2 className="text-xl font-bold mb-6 font-['Dancing_Script']">Información de Pago</h2>
                   
                   <form onSubmit={processPayment} className="space-y-6">
-                    <div className="space-y-4">
+                    <section className="space-y-4">
                       <h3 className="font-medium text-[var(--foreground-muted)]">Datos de la Tarjeta</h3>
                       
-                      <div>
+                      <section>
                         <label className="block text-sm mb-1" htmlFor="cardName">
                           Nombre en la tarjeta
                         </label>
@@ -457,9 +457,9 @@ const Payment = () => {
                         {formErrors.cardName && (
                           <p className="mt-1 text-sm text-red-500">{formErrors.cardName}</p>
                         )}
-                      </div>
+                      </section>
                       
-                      <div>
+                      <section>
                         <label className="block text-sm mb-1" htmlFor="cardNumber">
                           Número de tarjeta
                         </label>
@@ -480,10 +480,10 @@ const Payment = () => {
                         {formErrors.cardNumber && (
                           <p className="mt-1 text-sm text-red-500">{formErrors.cardNumber}</p>
                         )}
-                      </div>
+                      </section>
                       
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
+                      <section className="grid grid-cols-2 gap-4">
+                        <section>
                           <label className="block text-sm mb-1" htmlFor="cardExpiry">
                             Fecha caducidad
                           </label>
@@ -504,9 +504,9 @@ const Payment = () => {
                           {formErrors.cardExpiry && (
                             <p className="mt-1 text-sm text-red-500">{formErrors.cardExpiry}</p>
                           )}
-                        </div>
+                        </section>
                         
-                        <div>
+                        <section>
                           <label className="block text-sm mb-1" htmlFor="cardCVC">
                             CVC/CVV
                           </label>
@@ -527,14 +527,14 @@ const Payment = () => {
                           {formErrors.cardCVC && (
                             <p className="mt-1 text-sm text-red-500">{formErrors.cardCVC}</p>
                           )}
-                        </div>
-                      </div>
-                    </div>
+                        </section>
+                      </section>
+                    </section>
 
-                    <div className="space-y-4">
+                    <section className="space-y-4">
                       <h3 className="font-medium text-[var(--foreground-muted)]">Información de Contacto</h3>
                       
-                      <div>
+                      <section>
                         <label className="block text-sm mb-1" htmlFor="email">
                           Email
                         </label>
@@ -555,9 +555,9 @@ const Payment = () => {
                         {formErrors.email && (
                           <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>
                         )}
-                      </div>
+                      </section>
                       
-                      <div>
+                      <section>
                         <label className="block text-sm mb-1" htmlFor="phone">
                           Teléfono
                         </label>
@@ -578,8 +578,8 @@ const Payment = () => {
                         {formErrors.phone && (
                           <p className="mt-1 text-sm text-red-500">{formErrors.phone}</p>
                         )}
-                      </div>
-                    </div>
+                      </section>
+                    </section>
                     
                     <motion.button
                       whileHover={{ 
@@ -614,13 +614,13 @@ const Payment = () => {
                       )}
                     </motion.button>
                   </form>
-                </div>
-              </div>
-            </motion.div>
+                </section>
+              </section>
+            </motion.section>
           )}
         </AnimatePresence>
-      </div>
-    </div>
+      </section>
+    </section>
   );
 };
 

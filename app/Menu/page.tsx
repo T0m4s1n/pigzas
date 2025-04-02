@@ -271,8 +271,8 @@ export default function Menu() {
       <PizzaHeader onCartClick={() => setIsCartOpen(true)} cartItemCount={cartItemCount} />
       <PigzasBackground />
       
-      <div className="container mx-auto px-6 py-16 min-h-screen">
-        <motion.div
+      <section className="container mx-auto px-6 py-16 min-h-screen">
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -309,31 +309,31 @@ export default function Menu() {
             <Plus className="h-6 w-6" />
             <span>Diseña Tu Propia Pizza</span>
           </motion.button>
-        </motion.div>
+        </motion.section>
         
-        <motion.div
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="flex items-center justify-center space-x-4 mb-4 mt-8">
+          <section className="flex items-center justify-center space-x-4 mb-4 mt-8">
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <h1 className="font-['Dancing_Script'] font-bold text-4xl text-[var(--foreground)]">
               Menú Pigzas
             </h1>
-          </div>
+          </section>
           <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
             Nuestras Creaciones Especiales
           </h2>
           <p className="text-lg max-w-2xl mx-auto leading-relaxed">
             Descubre nuestras pizzas cuidadosamente diseñadas por nuestros chefs. Sabores tradicionales y combinaciones únicas para satisfacer todos los gustos.
           </p>
-        </motion.div>
+        </motion.section>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {pizzas.map((pizza, index) => (
-            <motion.div
+            <motion.section
               key={pizza.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -345,20 +345,20 @@ export default function Menu() {
               }}
               className="bg-[var(--card-background)] rounded-xl shadow-md overflow-hidden"
             >
-              <div className="relative h-48 overflow-hidden">
+              <section className="relative h-48 overflow-hidden">
                 <img
                   src={pizza.image}
                   alt={pizza.name}
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-3">
+              </section>
+              <section className="p-6">
+                <section className="flex justify-between items-center mb-3">
                   <h3 className="text-xl font-bold text-[var(--foreground)]">{pizza.name}</h3>
                   <span className="font-bold text-[var(--accent)]">${formatPrice(pizza.price)}</span>
-                </div>
+                </section>
                 <p className="text-[var(--foreground-muted)] mb-4">{pizza.description}</p>
-                <div className="flex space-x-2">
+                <section className="flex space-x-2">
                   <motion.button
                     whileHover={{ 
                       scale: 1.05,
@@ -406,18 +406,18 @@ export default function Menu() {
                   >
                     <Info className="h-5 w-5" />
                   </motion.button>
-                </div>
-              </div>
-            </motion.div>
+                </section>
+              </section>
+            </motion.section>
           ))}
-        </div>
-      </div>
+        </section>
+      </section>
 
       {/* Pizza Detail Modal */}
       <AnimatePresence>
         {selectedPizza && (
           <>
-            <motion.div
+            <motion.section
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
@@ -426,15 +426,15 @@ export default function Menu() {
               onClick={closeDetails}
             />
             
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-              <motion.div 
+            <section className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+              <motion.section 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 className="bg-[var(--card-background)] rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border-2 border-[var(--accent)]"
               >
-                <div className="flex justify-between items-center mb-4">
+                <section className="flex justify-between items-center mb-4">
                   <h3 className="text-2xl font-bold text-[var(--foreground)]">{selectedPizza.name}</h3>
                   <motion.button 
                     onClick={closeDetails}
@@ -452,24 +452,24 @@ export default function Menu() {
                   >
                     <X className="h-6 w-6" />
                   </motion.button>
-                </div>
+                </section>
                 
-                <div className="relative h-48 overflow-hidden rounded-lg mb-4">
+                <section className="relative h-48 overflow-hidden rounded-lg mb-4">
                   <img
                     src={selectedPizza.image}
                     alt={selectedPizza.name}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </section>
                 
                 <p className="text-[var(--foreground)] mb-4">{selectedPizza.details}</p>
                 
-                <div className="flex items-center mb-4">
+                <section className="flex items-center mb-4">
                   <Clock className="h-5 w-5 mr-2 text-[var(--accent)]" />
                   <span className="text-[var(--foreground-muted)]">Tiempo de preparación: <strong>{selectedPizza.prepTime}</strong></span>
-                </div>
+                </section>
                 
-                <div className="flex justify-between items-center">
+                <section className="flex justify-between items-center">
                   <span className="font-bold text-xl text-[var(--accent)]">${formatPrice(selectedPizza.price)}</span>
                   <motion.button
                     whileHover={{ 
@@ -499,9 +499,9 @@ export default function Menu() {
                     <ShoppingBag className="h-5 w-5" />
                     <span>Añadir al Carrito</span>
                   </motion.button>
-                </div>
-              </motion.div>
-            </div>
+                </section>
+              </motion.section>
+            </section>
           </>
         )}
       </AnimatePresence>
