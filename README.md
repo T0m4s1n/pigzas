@@ -16,7 +16,7 @@ Una aplicación web moderna e interactiva para un servicio de entrega de pizzas 
 - **Next.js** - Framework de React para aplicaciones renderizadas en servidor
 - **TypeScript** - Verificación de tipos estática
 - **Framer Motion** - Biblioteca de animaciones
-- **Lucide Icons** - Hermosos iconos SVG
+- **Lucide Icons** - iconos SVG
 - **Tailwind CSS** - Framework CSS basado en utilidades
 
 ## Primeros Pasos
