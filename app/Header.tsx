@@ -63,17 +63,17 @@ const PizzaHeader: React.FC = () => {
   if (!mounted) {
     return (
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
-        <div className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
-          <div className="flex items-center space-x-4">
-            <div className="h-10 w-10" />
+        <section className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
+          <section className="flex items-center space-x-4">
+            <section className="h-10 w-10" />
             <span className="font-['Dancing_Script'] font-bold text-3xl tracking-tight">
               Pigzas
             </span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-full" />
-          </div>
-        </div>
+          </section>
+          <section className="flex items-center space-x-3">
+            <section className="p-2 rounded-full" />
+          </section>
+        </section>
       </header>
     );
   }
@@ -90,7 +90,7 @@ const PizzaHeader: React.FC = () => {
       `}</style>
 
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-[var(--border)] bg-[var(--background)] transition-colors">
-        <div className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
+        <section className="container mx-auto max-w-7xl flex h-24 items-center justify-between px-4 sm:px-6 relative">
           <motion.a 
             href="/"
             initial={{ opacity: 0, x: -40 }}
@@ -140,7 +140,7 @@ const PizzaHeader: React.FC = () => {
             ))}
           </nav>
           
-          <div className="flex items-center space-x-3">
+          <section className="flex items-center space-x-3">
             <motion.button 
               onClick={toggleTheme} 
               whileHover={{ rotate: 10 }}
@@ -184,7 +184,7 @@ const PizzaHeader: React.FC = () => {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="
                   absolute -top-2 -right-2 
-                  bg-[var(--accent)] text-white 
+                  bg-[var(--accent)] text-[var(--foreground)]
                   rounded-full 
                   w-5 h-5 
                   flex items-center justify-center 
@@ -235,11 +235,11 @@ const PizzaHeader: React.FC = () => {
               <ShoppingBag className="h-5 w-5" />
               <span className="font-semibold">Hacer Pedido</span>
             </motion.a>
-          </div>
+          </section>
 
           <AnimatePresence>
             {isMobileMenuOpen && (
-              <motion.div
+              <motion.section
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -50 }}
@@ -255,7 +255,7 @@ const PizzaHeader: React.FC = () => {
                   border-b border-[var(--border)]
                 "
               >
-                <div className="flex flex-col items-center py-4 space-y-4">
+                <section className="flex flex-col items-center py-4 space-y-4">
                   {navLinks.map((link, index) => (
                     <motion.a
                       key={link.label}
@@ -303,16 +303,17 @@ const PizzaHeader: React.FC = () => {
                     <ShoppingBag className="h-5 w-5" />
                     <span>Ver Carrito ({totalItems})</span>
                   </motion.button>
-                </div>
-              </motion.div>
+                </section>
+              </motion.section>
             )}
           </AnimatePresence>
-        </div>
+        </section>
       </header>
 
       <ShoppingCart 
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
+        // @ts-expect-error error
         cartItems={cartItems}
         setCartItems={setCartItems}
       />

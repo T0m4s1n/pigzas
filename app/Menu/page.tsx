@@ -194,7 +194,7 @@ export default function Menu() {
       id: `${pizza.id}-${Date.now()}`, // Ensure unique ID for cart items
       name: pizza.name,
       size: size,
-      price: pizza.price / 100, // Convert to Euros format (assuming price is in cents)
+      price: pizza.price, // Convert to Euros format (assuming price is in cents)
       quantity: 1,
       image: pizza.image
     };
@@ -266,7 +266,8 @@ export default function Menu() {
         onClose={() => setIsCartOpen(false)}
         cartService={cartService}
       />
-
+  	  
+      {/* @ts-expect-error: PizzaHeader does not have explicit TypeScript types for its props */}
       <PizzaHeader onCartClick={() => setIsCartOpen(true)} cartItemCount={cartItemCount} />
       <PigzasBackground />
       

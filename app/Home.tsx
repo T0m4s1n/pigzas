@@ -54,12 +54,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="fixed inset-0 z-[0]">
+      <span className="fixed inset-0 z-[0]">
         <PigzasBackground />
-      </div>
+      </span>
       
-      <div className="container mx-auto px-6 pt-24 min-h-screen flex flex-col md:flex-row items-center justify-between relative z-1">
-        <motion.div 
+      <main className="container mx-auto px-6 pt-24 min-h-screen flex flex-col md:flex-row items-center justify-between relative z-1">
+        <motion.section 
           initial={{ opacity: 0, y: 20 }}
           animate={{ 
             opacity: 1, 
@@ -77,20 +77,20 @@ export default function Home() {
             alt="Delicious Pigzas Pizza" 
             className="w-full"
           />
-        </motion.div>
+        </motion.section>
 
-        <motion.div 
+        <motion.section 
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="w-full md:w-1/2 text-[var(--foreground)] bg-opacity-50 p-6 rounded-lg"
         >
-          <div className="flex items-center space-x-4 mb-6">
+          <header className="flex items-center space-x-4 mb-6">
             <Pizza className="h-10 w-10 text-[var(--accent)]" />
             <h1 className="font-['Dancing_Script'] font-bold text-4xl text-[var(--foreground)]">
               Pigzas
             </h1>
-          </div>
+          </header>
 
           <h2 className="text-2xl font-bold mb-4 text-[var(--accent)]">
             Tu Pizza, Tu Eleccion
@@ -100,20 +100,20 @@ export default function Home() {
             Diseña tu pizza perfecta con ingredientes frescos. Cada pizza, una creación única. Transforma tu hambre en una experiencia culinaria personalizada.
           </p>
 
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
+          <ul className="space-y-4">
+            <li className="flex items-center space-x-3">
               <PizzaIcon className="h-7 w-7 text-[var(--accent)]" />
               <span>Personaliza ingredientes</span>
-            </div>
-            <div className="flex items-center space-x-3">
+            </li>
+            <li className="flex items-center space-x-3">
               <Pizza className="h-7 w-7 text-[var(--accent)]" />
               <span>Recetas originales</span>
-            </div>
-            <div className="flex items-center space-x-3">
+            </li>
+            <li className="flex items-center space-x-3">
               <ShoppingBag className="h-7 w-7 text-[var(--accent)]" />
               <span>Entrega rápida</span>
-            </div>
-          </div>
+            </li>
+          </ul>
 
           <motion.button 
             whileHover={{ 
@@ -140,42 +140,42 @@ export default function Home() {
             <ShoppingBag className="h-7 w-7" />
             <span>Comenzar a Diseñar</span>
           </motion.button>
-        </motion.div>
-      </div>
+        </motion.section>
+      </main>
     
-      <div className="container mx-auto px-6 py-24 relative z-1 mb-24">
-        <div className="text-center mb-16">
+      <section className="container mx-auto px-6 py-24 relative z-1 mb-24">
+        <header className="text-center mb-16">
           <h2 className="text-3xl font-bold text-[var(--accent)] mb-4">Nuestras Especialidades</h2>
           <p className="text-lg max-w-2xl mx-auto">
             Descubre nuestra selección de pizzas artesanales, elaboradas con los mejores ingredientes y nuestra pasión por la cocina italiana.
           </p>
-        </div>
+        </header>
         
-        <motion.div 
+        <motion.article 
           className="mb-16 bg-white bg-opacity-80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/2 h-64 md:h-auto relative">
-              <div 
+          <section className="flex flex-col md:flex-row">
+            <figure className="md:w-1/2 h-64 md:h-auto relative">
+              <span 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${pizzaFlavors[1].image})` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
-              </div>
-              <div className="absolute top-4 left-4 bg-[var(--brass-500)] text-white px-4 py-1 rounded-full text-sm font-medium">
+                <span className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></span>
+              </span>
+              <span className="absolute top-4 left-4 bg-[var(--brass-500)] text-white px-4 py-1 rounded-full text-sm font-medium">
                 Más Popular
-              </div>
-            </div>
-            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
-              <div className="flex justify-between items-center mb-4">
+              </span>
+            </figure>
+            <section className="md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+              <header className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-bold text-[var(--accent)]">{pizzaFlavors[1].name}</h3>
                 <span className="text-xl font-semibold text-[var(--brass-500)]">
                   ${pizzaFlavors[1].price.toLocaleString('es-CO')}
                 </span>
-              </div>
+              </header>
               
               <p className="text-gray-700 mb-6">
                 {pizzaFlavors[1].details}
@@ -190,13 +190,13 @@ export default function Home() {
                 <ShoppingBag className="h-5 w-5" />
                 <span>Añadir al Carrito</span>
               </motion.button>
-            </div>
-          </div>
-        </motion.div>
+            </section>
+          </section>
+        </motion.article>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {pizzaFlavors.filter(pizza => pizza.id !== 2).map((pizza, index) => (
-            <motion.div 
+            <motion.li 
               key={pizza.id}
               className="bg-white bg-opacity-70 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               initial={{ opacity: 0, y: 20 }}
@@ -210,16 +210,16 @@ export default function Home() {
               }}
               whileHover={{ y: -5 }}
             >
-              <div 
+              <figure 
                 className="h-48 bg-cover bg-center relative"
                 style={{ backgroundImage: `url(${pizza.image})` }}
               >
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <h3 className="text-white font-bold text-lg">{pizza.name}</h3>
-                </div>
-              </div>
-              <div className="p-4">
-                <div className="flex justify-between items-center mb-2">
+                </figcaption>
+              </figure>
+              <section className="p-4">
+                <header className="flex justify-between items-center mb-2">
                   <span className="text-sm text-gray-600 flex items-center gap-1">
                     <Info className="h-4 w-4" />
                     {pizza.prepTime}
@@ -227,7 +227,7 @@ export default function Home() {
                   <span className="font-bold text-[var(--brass-500)]">
                     ${pizza.price.toLocaleString('es-CO')}
                   </span>
-                </div>
+                </header>
                 <p className="text-gray-700 text-sm line-clamp-2 mb-4">
                   {pizza.description}
                 </p>
@@ -240,32 +240,32 @@ export default function Home() {
                   <ShoppingBag className="h-4 w-4" />
                   <span>Añadir al Carrito</span>
                 </motion.button>
-              </div>
-            </motion.div>
+              </section>
+            </motion.li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
       
       {showModal && (
-        <motion.div 
+        <motion.aside 
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={() => setShowModal(false)}
         >
-          <motion.div 
+          <motion.article 
             className="bg-white rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={e => e.stopPropagation()}
           >
-            <div className="relative h-64 md:h-80">
-              <div 
+            <figure className="relative h-64 md:h-80">
+              <span 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${pizzaFlavors[0].image})` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-              </div>
+                <span className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></span>
+              </span>
               <motion.button 
                 className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/80 flex items-center justify-center"
                 whileHover={{ scale: 1.1 }}
@@ -274,32 +274,32 @@ export default function Home() {
               >
                 <span className="text-2xl">&times;</span>
               </motion.button>
-              <div className="absolute bottom-0 left-0 p-6">
+              <figcaption className="absolute bottom-0 left-0 p-6">
                 <h2 className="text-white text-3xl font-bold">{pizzaFlavors[0].name}</h2>
-              </div>
-            </div>
+              </figcaption>
+            </figure>
             
-            <div className="p-6 overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center space-x-2">
+            <section className="p-6 overflow-y-auto">
+              <header className="flex justify-between items-center mb-6">
+                <span className="flex items-center space-x-2">
                   <span className="bg-[var(--accent)]/10 text-[var(--accent)] px-3 py-1 rounded-full text-sm">
                     {pizzaFlavors[0].prepTime}
                   </span>
-                </div>
+                </span>
                 <span className="text-2xl font-bold text-[var(--brass-500)]">
                   ${pizzaFlavors[0].price.toLocaleString('es-CO')}
                 </span>
-              </div>
+              </header>
               
-              <div className="mb-8">
+              <section className="mb-8">
                 <h3 className="text-lg font-medium mb-2 text-gray-800">Ingredientes</h3>
                 <p className="text-gray-700">{pizzaFlavors[0].description}</p>
-              </div>
+              </section>
               
-              <div className="mb-8">
+              <section className="mb-8">
                 <h3 className="text-lg font-medium mb-2 text-gray-800">Detalles</h3>
                 <p className="text-gray-700">{pizzaFlavors[0].details}</p>
-              </div>
+              </section>
               
               <motion.button 
                 whileHover={{ scale: 1.03, backgroundColor: 'var(--brass-600)' }}
@@ -310,9 +310,9 @@ export default function Home() {
                 <ShoppingBag className="h-5 w-5" />
                 <span>Añadir al Carrito</span>
               </motion.button>
-            </div>
-          </motion.div>
-        </motion.div>
+            </section>
+          </motion.article>
+        </motion.aside>
       )}
     </>
   );

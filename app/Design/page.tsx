@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import PizzaHeader from '../Header';
 import PigzasBackground from '../Pizzabackground';
@@ -10,7 +10,6 @@ import {
     ChevronRight,
     ChevronLeft,
     Clock,
-    Trash2,
     Scissors,
     Check,
 } from 'lucide-react';
@@ -22,14 +21,20 @@ const PizzaDesigner = () => {
     const [pizzaSize, setPizzaSize] = useState<'small' | 'medium' | 'large' | 'xl'>('medium');
     const [pizzaCrust, setPizzaCrust] = useState<'thin' | 'traditional' | 'thick' | 'stuffed'>('traditional');
     const [twoFlavors, setTwoFlavors] = useState(false);
-    // Removed duplicate Ingredient interface declaration
     
-    const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>([]);
+    // New toppings state management
     const [bakingTime, setBakingTime] = useState(15);
     const [cutStyle, setCutStyle] = useState('traditional');
     const [price, setPrice] = useState(18900);
-    const pizzaRef = useRef(null);
-    
+    const [selectedIngredients, setSelectedIngredients] = useState<Topping[]>([]);
+
+    const toggleTopping = (topping: Topping) => {
+        setSelectedIngredients((prev) =>
+            prev.some((i) => i.id === topping.id)
+                ? prev.filter((i) => i.id !== topping.id)
+                : [...prev, topping]
+        );
+    };
     // Pizza visualization sizes based on selected size
     const pizzaSizeDimensions = {
         small: { outerInset: 3, innerInset: 9, scale: 0.85 },
@@ -53,45 +58,22 @@ const PizzaDesigner = () => {
         20: { baseColor: '#E6A328', crustAdjustment: 10 },  // Darker/more baked
     };
 
-    const ingredientCategories = React.useMemo(() => [
-        {
-                name: "Proteínas",
-                items: [
-                        { id: 'pepperoni', name: 'Pepperoni', image: './assets/peperoni.png', price: 2500 },
-                        { id: 'ham', name: 'Jamón', image: '/ham.png', price: 4000 },
-                        { id: 'chicken', name: 'Pollo', image: '/chicken.png', price: 2500 },
-                        { id: 'bacon', name: 'Tocino', image: '/bacon.png', price: 2000 },
-                ]
-        },
-        {
-                name: "Vegetales",
-                items: [
-                        { id: 'mushroom', name: 'Champiñones', image: '/mushroom.png', price: 1500 },
-                        { id: 'pepper', name: 'Pimiento', image: '/pepper.png', price: 1000 },
-                        { id: 'onion', name: 'Cebolla', image: '/onion.png', price: 1000 },
-                        { id: 'olive', name: 'Aceitunas', image: '/olive.png', price: 1500 },
-                ]
-        },
-        {
-                name: "Quesos",
-                items: [
-                        { id: 'mozzarella', name: 'Mozzarella', image: '/mozzarella.png', price: 2000 },
-                        { id: 'cheddar', name: 'Cheddar', image: '/cheddar.png', price: 2000 },
-                        { id: 'parmesan', name: 'Parmesano', image: '/parmesan.png', price: 2500 },
-                        { id: 'gouda', name: 'Gouda', image: '/gouda.png', price: 2500 },
-                ]
-        },
-        {
-                name: "Extras",
-                items: [
-                        { id: 'pineapple', name: 'Piña', image: '/pineapple.png', price: 1500 },
-                        { id: 'basil', name: 'Albahaca', image: '/basil.png', price: 500 },
-                        { id: 'arugula', name: 'Rúcula', image: '/arugula.png', price: 1000 },
-                        { id: 'chili', name: 'Chile', image: '/chili.png', price: 500 },
-                ]
-        }
-    ], []);
+    // Define interface for toppings
+    interface Topping {
+        id: string;
+        name: string;
+        image: string;
+        price: number;
+        category: string;
+    }
 
+    const toppings: Topping[] = [
+        { id: 'mozzarella', name: 'Mozzarella', image: '/mozzarella.png', price: 1000, category: 'cheese' },
+        { id: 'cheddar', name: 'Cheddar', image: '/cheddar.png', price: 1200, category: 'cheese' },
+        { id: 'pepperoni', name: 'Pepperoni', image: '/pepperoni.png', price: 1500, category: 'meat' },
+        { id: 'mushroom', name: 'Mushroom', image: '/mushroom.png', price: 800, category: 'veggie' },
+        { id: 'olive', name: 'Olive', image: '/olive.png', price: 700, category: 'veggie' },
+    ];
 
     const cutStyles = [
         { id: 'traditional', name: 'Tradicional', image: '/traditional-cut.png' },
@@ -100,14 +82,12 @@ const PizzaDesigner = () => {
         { id: 'uncut', name: 'Sin Cortar', image: '/uncut.png' },
     ];
 
-
     const sizeOptions = React.useMemo(() => [
       { id: 'small', name: 'Pequeña', priceMultiplier: 0.8, slices: 6 } as const,
       { id: 'medium', name: 'Mediana', priceMultiplier: 1, slices: 8 } as const,
       { id: 'large', name: 'Grande', priceMultiplier: 1.2, slices: 10 } as const,
       { id: 'xl', name: 'Extra Grande', priceMultiplier: 1.5, slices: 12 } as const,
     ], []);
-
 
     const crustOptions = React.useMemo(() => [
         { id: 'traditional', name: 'Tradicional', price: 0 } as const,
@@ -126,31 +106,9 @@ const PizzaDesigner = () => {
         const selectedCrust = crustOptions.find(crust => crust.id === pizzaCrust);
         basePrice += selectedCrust?.price ?? 0;
 
-        const ingredientsPrice = selectedIngredients.reduce((sum, ing) => sum + ing.price, 0);
-        
-        basePrice += ingredientsPrice;
-        
-        if (twoFlavors) {
-            basePrice += 2000;
-        }
         
         setPrice(Number(basePrice.toFixed(0)));
-    }, [pizzaSize, pizzaCrust, twoFlavors, selectedIngredients, crustOptions, sizeOptions]);
-
-    interface Ingredient {
-        id: string;
-        name: string;
-        image: string;
-        price: number;
-    }
-
-    const addIngredient = (ingredient: Ingredient) => {
-        setSelectedIngredients(prev => [...prev, ingredient]);
-    };
-
-    const removeIngredient = (ingredientId: string) => {
-        setSelectedIngredients(prev => prev.filter(ing => ing.id !== ingredientId));
-    };
+    }, [pizzaSize, pizzaCrust, twoFlavors, crustOptions, sizeOptions]);
 
     const nextStep = () => {
         if (currentStep < 5) {
@@ -165,12 +123,12 @@ const PizzaDesigner = () => {
     };
 
     const addToCart = () => {
-        alert("¡Pizza personalizada añadida al carrito!");
+        alert("Funcion no disponible temporalmente");
         router.push('');
     };
 
     // Common pizza visualization component for consistency across steps
-    const PizzaVisualization = ({ showIngredients = true, showCutStyle = false, size = "md", twoFlavors = false, pizzaCrust, selectedIngredients = [] }: { showIngredients?: boolean; showCutStyle?: boolean; size?: string; twoFlavors?: boolean; pizzaCrust?: 'traditional' | 'thin' | 'thick' | 'stuffed'; selectedIngredients?: Ingredient[] }) => {
+    const PizzaVisualization = ({ showToppings = true, showCutStyle = false, size = "md", twoFlavors = false, pizzaCrust, selectedToppings = [] }: { showToppings?: boolean; showCutStyle?: boolean; size?: string; twoFlavors?: boolean; pizzaCrust?: 'traditional' | 'thin' | 'thick' | 'stuffed'; selectedToppings?: Topping[] }) => {
         const dimensions = pizzaSizeDimensions[pizzaSize];
         const crustStyle = pizzaCrust ? pizzaCrustStyles[pizzaCrust] : pizzaCrustStyles['traditional'];
         const bakingColor = bakingTimeColors[bakingTime as keyof typeof bakingTimeColors] || bakingTimeColors[15]; // Default to 15 if invalid
@@ -208,44 +166,43 @@ const PizzaDesigner = () => {
                     <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-[var(--brass-600)] transform -translate-x-1/2 z-10"></div>
                 )}
 
-                {/* Render ingredients if showing them */}
-                {showIngredients && selectedIngredients.flatMap((ingredient, ingredientIndex) => {
-                    // Removed unused variable isTwoFlavors
-                    // Create 3-7 instances of each ingredient based on ingredient type
-                    const instanceCount = ingredient.id.includes('cheese') ? 7 : 
-                                        ingredient.id.includes('pepperoni') ? 6 : 
-                                        ingredient.id.includes('olive') ? 5 : 4;
+                {/* Render toppings if showing them */}
+                {showToppings && selectedToppings.flatMap((topping, toppingIndex) => {
+                    // Create 3-7 instances of each topping based on topping type
+                    const instanceCount = topping.id.includes('cheese') ? 7 : 
+                                        topping.id.includes('pepperoni') ? 6 : 
+                                        topping.id.includes('olive') ? 5 : 4;
                     
                     return Array.from({ length: instanceCount }).map((_, instanceIndex) => {
-                        const randomAngle = (ingredientIndex * 30 + instanceIndex * 50) % 360;
-                        const randomRadius = 10 + (instanceIndex * 30 + ingredientIndex * 5) % 30;
+                        const randomAngle = (toppingIndex * 30 + instanceIndex * 50) % 360;
+                        const randomRadius = 10 + (instanceIndex * 30 + toppingIndex * 5) % 30;
                         const angleInRadians = (randomAngle * Math.PI) / 180;
                         
                         // Calculate x,y position using polar coordinates
                         const posX = 50 + randomRadius * Math.cos(angleInRadians);
                         const posY = 50 + randomRadius * Math.sin(angleInRadians);
                         
-                        // Skip if we're doing half-and-half and this ingredient should be on the other half
+                        // Skip if we're doing half-and-half and this topping should be on the other half
                         if (twoFlavors) {
                             const isLeftHalf = posX < 50;
-                            if ((ingredientIndex % 2 === 0 && !isLeftHalf) || 
-                                (ingredientIndex % 2 === 1 && isLeftHalf)) {
+                            if ((toppingIndex % 2 === 0 && !isLeftHalf) || 
+                                (toppingIndex % 2 === 1 && isLeftHalf)) {
                                 return null;
                             }
                         }
                         
                         // Random rotation for visual interest
-                        const rotation = (ingredientIndex * 20 + instanceIndex * 40) % 360;
+                        const rotation = (toppingIndex * 20 + instanceIndex * 40) % 360;
                         
-                        // Size based on ingredient type and pizza size
-                        const baseSize = ingredient.id === 'olive' || ingredient.id === 'pepperoni' ? 6 :
-                                        ingredient.id === 'pineapple' ? 7 : 8;
+                        // Size based on topping type and pizza size
+                        const baseSize = topping.id === 'olive' || topping.id === 'pepperoni' ? 6 :
+                                        topping.id === 'pineapple' ? 7 : 8;
                                        
                         const sizePx = baseSize * (dimensions.scale || 1);
                         
                         return (
                             <motion.div
-                                key={`${ingredient.id}-${ingredientIndex}-${instanceIndex}`}
+                                key={`${topping.id}-${toppingIndex}-${instanceIndex}`}
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.3, delay: instanceIndex * 0.05 }}
@@ -256,23 +213,22 @@ const PizzaDesigner = () => {
                                     width: `${sizePx}px`,
                                     height: `${sizePx}px`,
                                     transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-                                    zIndex: 5 + ingredientIndex
+                                    zIndex: 5 + toppingIndex
                                 }}
                             >
                                 <img 
-                                    src={`/api/placeholder/32/32?text=${ingredient.id}`} 
-                                    alt={ingredient.name}
+                                    src={`/api/placeholder/32/32?text=${topping.id}`} 
+                                    alt={topping.name}
                                     className="object-contain w-full h-full"
                                     style={{ 
-                                        transform: ingredient.id === 'pineapple' ? 'rotate(45deg)' : 'none'
+                                        transform: topping.id === 'pineapple' ? 'rotate(45deg)' : 'none'
                                     }}
                                 />
                             </motion.div>
                         );
-                    }).filter(Boolean); // Remove null entries (for half pizzas)
+                    }).filter(Boolean); 
                 })}
 
-                {/* Render cut style if showing it */}
                 {showCutStyle && cutStyle && (
                     <>
                         {cutStyle === 'traditional' && (
@@ -322,370 +278,435 @@ const PizzaDesigner = () => {
         );
     };
 
-const renderStepContent = () => {
-  switch(currentStep) {
-      case 1:
-          return (
-              <div className="flex flex-col lg:flex-row gap-8 items-center">
-                  <div className="lg:w-2/5 flex justify-center">
-                      <PizzaVisualization showIngredients={false} size="lg" />
-                  </div>
-                  
-                  <div className="lg:w-3/5 space-y-8">
-                      <div className="space-y-4">
-                          <h3 className="text-xl font-semibold text-[var(--foreground)]">1. Selecciona el tamaño</h3>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {sizeOptions.map(size => (
-                              <motion.div
-                              key={size.id}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => setPizzaSize(size.id)}
-                              className={`
-                                  p-4 rounded-lg cursor-pointer text-center border-2
-                                  ${pizzaSize === size.id ? 
-                                  'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
-                                  'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
-                              `}
-                              >
-                              <div className="flex justify-center mb-2">
-                                  <Pizza 
-                                  className={`h-10 w-10 ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`} 
-                                  style={{ transform: `scale(${0.7 + sizeOptions.findIndex(s => s.id === size.id) * 0.1})` }} 
-                                  />
-                              </div>
-                              <div className="font-semibold">{size.name}</div>
-                              <div className={`text-sm ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`}>
-                                  {size.slices} rebanadas
-                              </div>
-                              </motion.div>
-                          ))}
-                          </div>
-                      </div>
-                      
-                      <div className="space-y-4">
-                          <h3 className="text-xl font-semibold text-[var(--foreground)]">2. Tipo de masa</h3>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {crustOptions.map(crust => (
-                              <motion.div
-                              key={crust.id}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => setPizzaCrust(crust.id)}
-                              className={`
-                                  p-4 rounded-lg cursor-pointer text-center border-2 
-                                  ${pizzaCrust === crust.id ? 
-                                  'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
-                                  'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
-                              `}
-                              >
-                              <div className="font-semibold">{crust.name}</div>
-                              {crust.price > 0 && 
-                                  <div className={`text-sm ${pizzaCrust === crust.id ? 'text-white' : 'text-[var(--accent)]'}`}>
-                                  +${crust.price}
-                                  </div>
-                              }
-                              </motion.div>
-                          ))}
-                          </div>
-                      </div>
-                      
-                      <div className="space-y-4">
-                          <h3 className="text-xl font-semibold text-[var(--foreground)]">3. ¿Mitad y mitad?</h3>
-                          <div className="flex space-x-4">
-                          <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => setTwoFlavors(false)}
-                              className={`
-                              px-6 py-3 rounded-lg flex-1 border-2
-                              ${!twoFlavors ? 
-                                  'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
-                                  'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
-                              `}
-                          >
-                              Una sola
-                          </motion.button>
-                          <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => setTwoFlavors(true)}
-                              className={`
-                              px-6 py-3 rounded-lg flex-1 border-2
-                              ${twoFlavors ? 
-                                  'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
-                                  'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
-                              `}
-                          >
-                              Mitad y mitad (+$2000)
-                          </motion.button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          );
-      case 2:
-          return (
-              <div className="flex flex-col lg:flex-row gap-6">
-              <div className="lg:w-1/2 space-y-6">
-                  <h3 className="text-xl font-semibold text-[var(--foreground)]">Elige tus ingredientes</h3>
-                  
-                  {ingredientCategories.map(category => (
-                  <div key={category.name} className="space-y-3">
-                      <h4 className="font-medium text-[var(--accent)]">{category.name}</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {category.items.map(ingredient => {
-                          const isSelected = selectedIngredients.some(ing => ing.id === ingredient.id);
-                          
-                          return (
-                          <motion.div
-                              key={ingredient.id}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => isSelected ? 
-                              removeIngredient(ingredient.id) : 
-                              addIngredient(ingredient)
-                              }
-                              className={`
-                              p-3 rounded-lg cursor-pointer flex flex-col items-center justify-center text-center
-                              ${isSelected ? 
-                                  'bg-[var(--brass-500)] text-white' : 
-                                  'bg-[var(--card-hover)] text-[var(--foreground)]'}
-                              `}
-                          >
-                              <div className="h-12 w-12 flex items-center justify-center mb-1">
-                              <img 
-                                  src={`/api/placeholder/48/48?text=${ingredient.id}`} 
-                                  alt={ingredient.name}
-                                  className="object-contain h-10 w-10"
-                              />
-                              </div>
-                              <div className="text-sm font-medium">{ingredient.name}</div>
-                              <div className={`text-xs ${isSelected ? 'text-white' : 'text-[var(--accent)]'}`}>
-                              +${ingredient.price}
-                              </div>
-                          </motion.div>
-                          );
-                      })}
-                      </div>
-                  </div>
-                  ))}
-              </div>
-              
-              <div className="lg:w-1/2">
-                  <h3 className="text-xl font-semibold text-[var(--foreground)] mb-4">Diseña tu pizza</h3>
-                  
-                  <div ref={pizzaRef} className="mx-auto" style={{ maxWidth: '400px' }}>
-                  <PizzaVisualization 
-                      size="lg" 
-                      twoFlavors={twoFlavors}
-                      pizzaCrust={pizzaCrust}
-                  />
-                  </div>
-                  
-                  <div className="mt-6 space-y-4">
-                  <h4 className="font-medium text-[var(--foreground)]">Ingredientes seleccionados:</h4>
-                  
-                  {selectedIngredients.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                      {selectedIngredients.map(ingredient => (
-                          <motion.div
-                          key={ingredient.id}
-                          className="px-3 py-2 rounded-full bg-[var(--brass-500)] text-white flex items-center gap-2"
-                          >
-                          {ingredient.name}
-                          <Trash2 
-                              className="h-4 w-4 cursor-pointer" 
-                              onClick={(e) => {
-                              e.stopPropagation();
-                              removeIngredient(ingredient.id);
-                              }}
-                          />
-                          </motion.div>
-                      ))}
-                      </div>
-                  ) : (
-                      <p className="text-[var(--foreground-muted)]">
-                      No has seleccionado ingredientes. Haz clic en las opciones para añadirlos a tu pizza.
-                      </p>
-                  )}
-                  
-                  <p className="text-sm text-[var(--foreground-muted)]">
-                      <strong>Configuración actual:</strong> Pizza {sizeOptions.find(s => s.id === pizzaSize)?.name}, 
-                      masa {crustOptions.find(c => c.id === pizzaCrust)?.name}, 
-                      {twoFlavors ? ' mitad y mitad' : ' una sola'}
-                  </p>
-                  </div>
-              </div>
-              </div>
-          );  
-      case 3:
-          return (
-              <div className="space-y-8">
-              <h3 className="text-xl font-semibold text-[var(--foreground)]">Tiempo de horneado</h3>
-              
-              <div className="max-w-xl mx-auto text-center space-y-6">
-                  <div className="flex items-center justify-center">
-                  <Clock className="h-16 w-16 text-[var(--accent)]" />
-                  </div>
-                  
-                  <p className="text-lg text-[var(--foreground)]">
-                  Elige cuánto tiempo quieres que horneemos tu pizza:
-                  </p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-                  <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setBakingTime(10)}
-                      className={`
-                      p-4 rounded-lg border-2
-                      ${bakingTime === 10 ? 
-                          'bg-[var(--brass-500)] text-white' : 
-                          'bg-[var(--card-hover)] text-[var(--foreground)]'}
-                      `}
-                  >
-                      <div className="font-medium text-lg">Suave</div>
-                      <div className="text-base">10 minutos</div>
-                      <div className="mt-2 text-sm">
-                      {bakingTime === 10 ? 'Seleccionado' : 'Masa más suave'}
-                      </div>
-                  </motion.button>
-                  
-                  <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setBakingTime(15)}
-                      className={`
-                      p-4 rounded-lg border-2
-                      ${bakingTime === 15 ? 
-                          'bg-[var(--brass-500)] text-white' : 
-                          'bg-[var(--card-hover)] text-[var(--foreground)]'}
-                      `}
-                  >
-                      <div className="font-medium text-lg">Clásica</div>
-                      <div className="text-base">15 minutos</div>
-                      <div className="mt-2 text-sm">
-                      {bakingTime === 15 ? 'Seleccionado' : 'Punto perfecto'}
-                      </div>
-                  </motion.button>
-                  
-                  <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setBakingTime(20)}
-                      className={`
-                      p-4 rounded-lg border-2
-                      ${bakingTime === 20 ? 
-                          'bg-[var(--brass-500)] text-white' : 
-                          'bg-[var(--card-hover)] text-[var(--foreground)]'}
-                      `}
-                  >
-                      <div className="font-medium text-lg">Crujiente</div>
-                      <div className="text-base">20 minutos</div>
-                      <div className="mt-2 text-sm">
-                      {bakingTime === 20 ? 'Seleccionado' : 'Extra crujiente'}
-                      </div>
-                  </motion.button>
-                  </div>
-                  
-                  <div className="mt-6 text-left p-4 bg-[var(--card-hover)] rounded-lg">
-                  <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
-                  <p className="text-sm text-[var(--foreground-muted)]">
-                      <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
-                      <strong>Masa:</strong> {crustOptions.find(c => c.id === pizzaCrust)?.name}<br />
-                      <strong>Estilo:</strong> {twoFlavors ? 'Mitad y mitad' : 'Una sola'}<br />
-                      <strong>Ingredientes:</strong> {selectedIngredients.length > 0 ? 
-                      selectedIngredients.map(ing => ing.name).join(', ') : 
-                      'Sin ingredientes adicionales'
-                      }
-                  </p>
-                  </div>
-              </div>
-              </div>
-          );
-      case 4:
-          return (
-              <div className="space-y-8">
-              <h3 className="text-xl font-semibold text-[var(--foreground)]">Estilo de corte</h3>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                  {cutStyles.map(style => (
-                  <motion.div
-                      key={style.id}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setCutStyle(style.id)}
-                      className={`
-                      p-4 rounded-lg cursor-pointer text-center
-                      ${cutStyle === style.id ? 
-                          'bg-[var(--brass-500)] text-white border-2 border-[var(--accent)]' : 
-                          'bg-[var(--card-hover)] text-[var(--foreground)]'}
-                      `}
-                  >
-                      <div className="relative h-32 w-32 bg-[#E63946] rounded-full mx-auto mb-3 overflow-hidden border-2 border-[#F9C784]">
-                      {style.id === 'traditional' && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-full h-0.5 bg-white opacity-70"></div>
-                          <div className="h-full w-0.5 bg-white opacity-70"></div>
-                          <div className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></div>
-                          <div className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></div>
-                          </div>
-                      )}
-                      
-                      {style.id === 'square' && (
-                          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          <div className="border border-white opacity-70"></div>
-                          </div>
-                      )}
-                      
-                      {style.id === 'strips' && (
-                          <div className="absolute inset-0 flex flex-col">
-                          <div className="flex-1 border-b border-white opacity-70"></div>
-                          <div className="flex-1 border-b border-white opacity-70"></div>
-                          <div className="flex-1 border-b border-white opacity-70"></div>
-                          <div className="flex-1 border-b border-white opacity-70"></div>
-                          <div className="flex-1"></div>
-                          </div>
-                      )}
-                      
-                      {style.id === 'uncut' && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                          <Scissors className="h-12 w-12 text-white opacity-70" style={{ transform: 'rotate(45deg)' }} />
-                          <div className="absolute h-12 w-12 flex items-center justify-center">
-                              <div className="h-full w-0.5 bg-white rotate-45"></div>
-                          </div>
-                          </div>
-                      )}
-                      </div>
-                      <div className="font-semibold text-lg">{style.name}</div>
-                  </motion.div>
-                  ))}
-              </div>
-              
-              <div className="mt-8 p-4 bg-[var(--card-hover)] rounded-lg">
-                  <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
-                  <p className="text-sm text-[var(--foreground-muted)]">
-                  <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
-                  <strong>Masa:</strong> {crustOptions.find(c => c.id === pizzaCrust)?.name}<br />
-                  <strong>Estilo:</strong> {twoFlavors ? 'Mitad y mitad' : 'Una sola'}<br />
-                  <strong>Tiempo de horneado:</strong> {bakingTime} minutos<br />
-                  <strong>Ingredientes:</strong> {selectedIngredients.length > 0 ? 
-                      selectedIngredients.map(ing => ing.name).join(', ') : 
-                      'Sin ingredientes adicionales'
-                  }
-                  </p>
-              </div>
-              </div>
-          );
+    const renderStepContent = () => {
+        switch(currentStep) {
+            case 1:
+                return (
+                    <div className="flex flex-col lg:flex-row gap-8 items-center">
+                        <div className="lg:w-2/5 flex justify-center">
+                            <PizzaVisualization showToppings={false} size="lg" />
+                        </div>
+                        
+                        <div className="lg:w-3/5 space-y-8">
+                            <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-[var(--foreground)]">1. Selecciona el tamaño</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {sizeOptions.map(size => (
+                                    <motion.div
+                                    key={size.id}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setPizzaSize(size.id)}
+                                    className={`
+                                        p-4 rounded-lg cursor-pointer text-center border-2
+                                        ${pizzaSize === size.id ? 
+                                        'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
+                                        'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                    `}
+                                    >
+                                    <div className="flex justify-center mb-2">
+                                        <Pizza 
+                                        className={`h-10 w-10 ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`} 
+                                        style={{ transform: `scale(${0.7 + sizeOptions.findIndex(s => s.id === size.id) * 0.1})` }} 
+                                        />
+                                    </div>
+                                    <div className="font-semibold">{size.name}</div>
+                                    <div className={`text-sm ${pizzaSize === size.id ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                        {size.slices} rebanadas
+                                    </div>
+                                    </motion.div>
+                                ))}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-[var(--foreground)]">2. Tipo de masa</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {crustOptions.map(crust => (
+                                    <motion.div
+                                    key={crust.id}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setPizzaCrust(crust.id)}
+                                    className={`
+                                        p-4 rounded-lg cursor-pointer text-center border-2 
+                                        ${pizzaCrust === crust.id ? 
+                                        'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
+                                        'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                    `}
+                                    >
+                                    <div className="font-semibold">{crust.name}</div>
+                                    {crust.price > 0 && 
+                                        <div className={`text-sm ${pizzaCrust === crust.id ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                        +${crust.price}
+                                        </div>
+                                    }
+                                    </motion.div>
+                                ))}
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-[var(--foreground)]">3. ¿Mitad y mitad?</h3>
+                                <div className="flex space-x-4">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setTwoFlavors(false)}
+                                    className={`
+                                    px-6 py-3 rounded-lg flex-1 border-2
+                                    ${!twoFlavors ? 
+                                        'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
+                                        'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                    `}
+                                >
+                                    Una sola
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setTwoFlavors(true)}
+                                    className={`
+                                    px-6 py-3 rounded-lg flex-1 border-2
+                                    ${twoFlavors ? 
+                                        'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' : 
+                                        'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                    `}
+                                >
+                                    Mitad y mitad (+$2000)
+                                </motion.button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 2:
+                // New case for ingredients selection
+                return (
+                    <div className="flex flex-col lg:flex-row gap-8 items-center">
+                        <div className="lg:w-2/5 flex justify-center">
+                            <PizzaVisualization showToppings={true} size="lg" selectedToppings={selectedIngredients} pizzaCrust={pizzaCrust} />
+                        </div>
+                        
+                        <div className="lg:w-3/5 space-y-8">
+                            <div className="space-y-4">
+                                <h3 className="text-xl font-semibold text-[var(--foreground)]">Selecciona los ingredientes</h3>
+                                
+                                {/* Categorized toppings display */}
+                                <div className="space-y-6">
+                                    {/* Cheese section */}
+                                    <div>
+                                        <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Quesos</h4>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                            {toppings.filter(t => t.category === 'cheese').map(topping => (
+                                                <motion.div
+                                                    key={topping.id}
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={() => toggleTopping(topping)}
+                                                    className={`
+                                                        p-3 rounded-lg cursor-pointer border
+                                                        ${selectedIngredients.some(i => i.id === topping.id) ?
+                                                            'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' :
+                                                            'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                                    `}
+                                                >
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                            {selectedIngredients.some(i => i.id === topping.id) ?
+                                                                <Check className="h-4 w-4 text-[var(--accent)]" /> :
+                                                                <span className="h-4 w-4" />
+                                                            }
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                            {topping.price > 0 &&
+                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                    +${topping.price}
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Meats section */}
+                                    <div>
+                                        <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Carnes</h4>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                            {toppings.filter(t => t.category === 'meat').map(topping => (
+                                                <motion.div
+                                                    key={topping.id}
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={() => toggleTopping(topping)}
+                                                    className={`
+                                                        p-3 rounded-lg cursor-pointer border
+                                                        ${selectedIngredients.some(i => i.id === topping.id) ?
+                                                            'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' :
+                                                            'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                                    `}
+                                                >
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                            {selectedIngredients.some(i => i.id === topping.id) ?
+                                                                <Check className="h-4 w-4 text-[var(--accent)]" /> :
+                                                                <span className="h-4 w-4" />
+                                                            }
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                            {topping.price > 0 &&
+                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                    +${topping.price}
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Vegetables section */}
+                                    <div>
+                                        <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Vegetales</h4>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                            {toppings.filter(t => t.category === 'veggie').map(topping => (
+                                                <motion.div
+                                                    key={topping.id}
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={() => toggleTopping(topping)}
+                                                    className={`
+                                                        p-3 rounded-lg cursor-pointer border
+                                                        ${selectedIngredients.some(i => i.id === topping.id) ?
+                                                            'bg-[var(--brass-500)] text-white border-[var(--accent-dark)]' :
+                                                            'bg-[var(--card-hover)] text-[var(--foreground)] border-[var(--border)]'}
+                                                    `}
+                                                >
+                                                    <div className="flex items-center">
+                                                        <div className="w-8 h-8 bg-[var(--card-background)] rounded-full flex items-center justify-center mr-2">
+                                                            {selectedIngredients.some(i => i.id === topping.id) ?
+                                                                <Check className="h-4 w-4 text-[var(--accent)]" /> :
+                                                                <span className="h-4 w-4" />
+                                                            }
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-sm">{topping.name}</div>
+                                                            {topping.price > 0 &&
+                                                                <div className={`text-xs ${selectedIngredients.some(i => i.id === topping.id) ? 'text-white' : 'text-[var(--accent)]'}`}>
+                                                                    +${topping.price}
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Selected ingredients summary */}
+                                <div className="mt-6 p-4 bg-[var(--card-hover)] rounded-lg">
+                                    <h4 className="font-medium text-[var(--foreground)] mb-2">Ingredientes seleccionados:</h4>
+                                    {selectedIngredients.length > 0 ? (
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedIngredients.map(ingredient => (
+                                                <span 
+                                                    key={ingredient.id}
+                                                    className="px-2 py-1 bg-[var(--brass-500)] text-white text-sm rounded-full flex items-center"
+                                                >
+                                                    {ingredient.name}
+                                                    <button 
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleTopping(ingredient);
+                                                        }}
+                                                        className="ml-1 w-4 h-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-xs"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-[var(--foreground-muted)] text-sm">Ningún ingrediente seleccionado todavía</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            case 3:
+                return (
+                    <div className="space-y-8">
+                    <h3 className="text-xl font-semibold text-[var(--foreground)]">Tiempo de horneado</h3>
+                    
+                    <div className="max-w-xl mx-auto text-center space-y-6">
+                        <div className="flex items-center justify-center">
+                        <Clock className="h-16 w-16 text-[var(--accent)]" />
+                        </div>
+                        
+                        <p className="text-lg text-[var(--foreground)]">
+                        Elige cuánto tiempo quieres que horneemos tu pizza:
+                        </p>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setBakingTime(10)}
+                            className={`
+                            p-4 rounded-lg border-2
+                            ${bakingTime === 10 ? 
+                                'bg-[var(--brass-500)] text-white' : 
+                                'bg-[var(--card-hover)] text-[var(--foreground)]'}
+                            `}
+                        >
+                            <div className="font-medium text-lg">Suave</div>
+                            <div className="text-base">10 minutos</div>
+                            <div className="mt-2 text-sm">
+                            {bakingTime === 10 ? 'Seleccionado' : 'Masa más suave'}
+                            </div>
+                        </motion.button>
+                        
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setBakingTime(15)}
+                            className={`
+                            p-4 rounded-lg border-2
+                            ${bakingTime === 15 ? 
+                                'bg-[var(--brass-500)] text-white' : 
+                                'bg-[var(--card-hover)] text-[var(--foreground)]'}
+                            `}
+                        >
+                            <div className="font-medium text-lg">Clásica</div>
+                            <div className="text-base">15 minutos</div>
+                            <div className="mt-2 text-sm">
+                            {bakingTime === 15 ? 'Seleccionado' : 'Punto perfecto'}
+                            </div>
+                        </motion.button>
+                        
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setBakingTime(20)}
+                            className={`
+                            p-4 rounded-lg border-2
+                            ${bakingTime === 20 ? 
+                                'bg-[var(--brass-500)] text-white' : 
+                                'bg-[var(--card-hover)] text-[var(--foreground)]'}
+                            `}
+                        >
+                            <div className="font-medium text-lg">Crujiente</div>
+                            <div className="text-base">20 minutos</div>
+                            <div className="mt-2 text-sm">
+                            {bakingTime === 20 ? 'Seleccionado' : 'Extra crujiente'}
+                            </div>
+                        </motion.button>
+                        </div>
+                        
+                        <div className="mt-6 text-left p-4 bg-[var(--card-hover)] rounded-lg">
+                        <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
+                        <p className="text-sm text-[var(--foreground-muted)]">
+                            <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
+                            <strong>Masa:</strong> {crustOptions.find(c => c.id === pizzaCrust)?.name}<br />
+                            <strong>Estilo:</strong> {twoFlavors ? 'Mitad y mitad' : 'Una sola'}<br />
+                            <strong>Ingredientes:</strong> {selectedIngredients.length > 0 ? 
+                            selectedIngredients.map(ing => ing.name).join(', ') : 
+                            'Sin ingredientes adicionales'
+                            }
+                        </p>
+                        </div>
+                    </div>
+                    </div>
+                );
+            case 4:
+                return (
+                    <div className="space-y-8">
+                    <h3 className="text-xl font-semibold text-[var(--foreground)]">Estilo de corte</h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        {cutStyles.map(style => (
+                        <motion.div
+                            key={style.id}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setCutStyle(style.id)}
+                            className={`
+                            p-4 rounded-lg cursor-pointer text-center border-2
+                            ${cutStyle === style.id ? 
+                                'bg-[var(--brass-500)] text-white border-2 border-[var(--accent)]' : 
+                                'bg-[var(--card-hover)] text-[var(--foreground)]'}
+                            `}
+                        >
+                            <div className="relative h-32 w-32 bg-[#E63946] rounded-full mx-auto mb-3 overflow-hidden border-2 border-[#F9C784]">
+                            {style.id === 'traditional' && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-full h-0.5 bg-white opacity-70"></div>
+                                <div className="h-full w-0.5 bg-white opacity-70"></div>
+                                <div className="w-3/4 h-0.5 bg-white opacity-70 rotate-45 absolute"></div>
+                                <div className="w-3/4 h-0.5 bg-white opacity-70 -rotate-45 absolute"></div>
+                                </div>
+                            )}
+                            
+                            {style.id === 'square' && (
+                                <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                <div className="border border-white opacity-70"></div>
+                                </div>
+                            )}
+                            
+                            {style.id === 'strips' && (
+                                <div className="absolute inset-0 flex flex-col">
+                                <div className="flex-1 border-b border-white opacity-70"></div>
+                                <div className="flex-1 border-b border-white opacity-70"></div>
+                                <div className="flex-1 border-b border-white opacity-70"></div>
+                                <div className="flex-1 border-b border-white opacity-70"></div>
+                                <div className="flex-1"></div>
+                                </div>
+                            )}
+                            
+                            {style.id === 'uncut' && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                <Scissors className="h-12 w-12 text-white opacity-70" style={{ transform: 'rotate(45deg)' }} />
+                                <div className="absolute h-12 w-12 flex items-center justify-center">
+                                    <div className="h-full w-0.5 bg-white rotate-45"></div>
+                                </div>
+                                </div>
+                            )}
+                            </div>
+                            <div className="font-semibold text-lg">{style.name}</div>
+                        </motion.div>
+                        ))}
+                    </div>
+                    
+                    <div className="mt-8 p-4 bg-[var(--card-hover)] rounded-lg">
+                        <h4 className="font-medium text-[var(--foreground)] mb-2">Resumen de tu pizza:</h4>
+                        <p className="text-sm text-[var(--foreground-muted)]">
+                        <strong>Tamaño:</strong> {sizeOptions.find(s => s.id === pizzaSize)?.name}<br />
+                        <strong>Masa:</strong> {crustOptions.find(c => c.id === pizzaCrust)?.name}<br />
+                        <strong>Estilo:</strong> {twoFlavors ? 'Mitad y mitad' : 'Una sola'}<br />
+                        <strong>Tiempo de horneado:</strong> {bakingTime} minutos<br />
+                        <strong>Ingredientes:</strong> {selectedIngredients.length > 0 ? 
+                            selectedIngredients.map(ing => ing.name).join(', ') : 
+                            'Sin ingredientes adicionales'
+                        }
+                        </p>
+                    </div>
+                    </div>
+                );
       case 5: 
           // Calcular precio total basado en todas las selecciones
           const calculateTotalPrice = () => {
@@ -982,7 +1003,7 @@ const renderStepContent = () => {
               "
             >
               <ShoppingBag className="h-5 w-5" />
-              <span>Añadir al Carrito</span>
+              <span>NO DISPONIBLE</span>
             </motion.button>
           )}
         </div>

@@ -185,38 +185,16 @@ export default function AboutUs() {
             <div className="flex flex-col items-center">
               <Clock className="h-10 w-10 text-[var(--accent)] mb-3" />
               <h4 className="text-lg font-bold mb-2 text-[var(--foreground)]">Horario</h4>
-              <p className="text-[var(--foreground-muted)]">Lunes a Domingo</p>
-              <p className="text-[var(--foreground-muted)]">12:00 - 22:00</p>
+              <p className="text-[var(--foreground-muted)]">solo los miercoles</p>
+              <p className="text-[var(--foreground-muted)]">de 7 a 10</p>
             </div>
             <div className="flex flex-col items-center">
               <Phone className="h-10 w-10 text-[var(--accent)] mb-3" />
               <h4 className="text-lg font-bold mb-2 text-[var(--foreground)]">Reservas</h4>
-              <p className="text-[var(--foreground-muted)]">(+123) 456-7890</p>
+              <p className="text-[var(--foreground-muted)]">numeritonice</p>
               <p className="text-[var(--foreground-muted)]">reservas@pigzas.com</p>
             </div>
           </div>
-          <motion.button
-            whileHover={{ 
-              scale: 1.05,
-              backgroundColor: 'var(--brass-600)' 
-            }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.1 }}
-            className="
-              mt-8 
-              px-8 py-3 
-              bg-[var(--brass-500)] 
-              text-white  
-              rounded-full 
-              shadow-md
-              hover:shadow-lg
-              text-lg
-              font-semibold
-              mx-auto
-            "
-          >
-            Reservar Mesa
-          </motion.button>
         </motion.div>
       </div>
     </>

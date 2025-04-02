@@ -1,17 +1,51 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CreditCard, CheckCircle, AlertCircle, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, CreditCard, CheckCircle, AlertCircle, ShoppingBag, MapPin } from 'lucide-react';
 import Link from 'next/link';
-import { OrderDetails } from '../Shoppingcart';
+import PigzasBackground from '../Pizzabackground';
+
+const useClientSearchParams = () => {
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+  
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    setSearchParams(params);
+  }, []);
+  
+  return searchParams;
+};
+
+// Define OrderDetails type for TypeScript
+export interface OrderDetails {
+  orderId: string;
+  items: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    size: string;
+    image: string;
+  }[];
+  subtotal: number;
+  total: number;
+  paymentStatus?: string;
+  transactionId?: string;
+  customerInfo?: {
+    email: string;
+    phone: string;
+    pickupMethod: string;
+  };
+}
 
 const Payment = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const orderId = searchParams.get('id');
+  const searchParams = useClientSearchParams();
   
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [formData, setFormData] = useState({
@@ -19,16 +53,28 @@ const Payment = () => {
     cardNumber: '',
     cardExpiry: '',
     cardCVC: '',
-    address: '',
-    city: '',
-    zipCode: '',
     email: '',
     phone: ''
   });
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+  const [isClient, setIsClient] = useState(false);
 
+  // Set isClient to true on component mount
   useEffect(() => {
-    if (orderId) {
+    setIsClient(true);
+  }, []);
+
+  // Get the order ID once searchParams is available
+  useEffect(() => {
+    if (searchParams) {
+      const id = searchParams.get('id');
+      setOrderId(id);
+    }
+  }, [searchParams]);
+
+  // Load order details once orderId is available
+  useEffect(() => {
+    if (isClient && orderId) {
       try {
         const orderDataString = localStorage.getItem(`order_${orderId}`);
         if (orderDataString) {
@@ -41,10 +87,8 @@ const Payment = () => {
         console.error("Error fetching order:", error);
         router.push('/Menu');
       }
-    } else {
-      router.push('/Menu');
     }
-  }, [orderId, router]);
+  }, [orderId, router, isClient]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,10 +142,6 @@ const Payment = () => {
       errors.cardCVC = 'El código debe tener 3 o 4 dígitos';
     }
     
-    if (!formData.address.trim()) errors.address = 'La dirección es obligatoria';
-    if (!formData.city.trim()) errors.city = 'La ciudad es obligatoria';
-    if (!formData.zipCode.trim()) errors.zipCode = 'El código postal es obligatorio';
-    
     if (!formData.email.trim()) {
       errors.email = 'El email es obligatorio';
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
@@ -114,6 +154,12 @@ const Payment = () => {
     return Object.keys(errors).length === 0;
   };
 
+  // Format the price in COP format (no decimals)
+  const formatCOP = (amount: number) => {
+    // Convert to integer by removing decimal part
+    const integerAmount = Math.round(amount);
+    return `$${integerAmount.toLocaleString('es-CO')}`;
+  };
 
   const processPayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,14 +169,16 @@ const Payment = () => {
     setPaymentStatus('processing');
     
     try {
+      // Simulate payment processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Always make the payment successful for this demo
       const paymentResponse = {
         success: true,
         transactionId: `TXN-${Date.now()}`
       };
       
-      if (paymentResponse.success) {
+      if (paymentResponse.success && isClient && orderId) {
         if (orderDetails) {
           const updatedOrder = {
             ...orderDetails,
@@ -139,13 +187,12 @@ const Payment = () => {
             customerInfo: {
               email: formData.email,
               phone: formData.phone,
-              address: `${formData.address}, ${formData.city}, ${formData.zipCode}`
+              pickupMethod: 'local'
             }
           };
           
           localStorage.setItem(`order_${orderId}`, JSON.stringify(updatedOrder));
-          
-          localStorage.removeItem('cartItems');
+          localStorage.removeItem('shoppingCart');
           
           setPaymentStatus('success');
         }
@@ -157,6 +204,17 @@ const Payment = () => {
       setPaymentStatus('error');
     }
   };
+  
+  // Show loading or error state if needed
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+        <div className="p-8 text-center">
+          <p className="text-[var(--foreground-muted)]">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
   
   if (!orderDetails) {
     return (
@@ -170,6 +228,16 @@ const Payment = () => {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <PigzasBackground/>
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+HU:wght@100..400&display=swap');
+        
+        body {
+          font-family: 'Playwrite HU', cursive;
+        }
+      `}</style>
+      
       <div className="max-w-4xl mx-auto p-4 sm:p-6">
         <div className="mb-8 flex items-center">
           <Link href="/Menu" className="mr-4">
@@ -181,7 +249,7 @@ const Payment = () => {
               <ArrowLeft className="h-5 w-5" />
             </motion.div>
           </Link>
-          <h1 className="text-2xl font-bold flex items-center">
+          <h1 className="text-2xl font-bold flex items-center font-['Dancing_Script']">
             <CreditCard className="mr-2 h-6 w-6 text-[var(--accent)]" />
             Pago
           </h1>
@@ -204,20 +272,56 @@ const Payment = () => {
                 <CheckCircle className="h-20 w-20 text-green-500" />
               </motion.div>
               
-              <h2 className="text-2xl font-bold">¡Pago Completado!</h2>
+              <h2 className="text-2xl font-bold font-['Dancing_Script']">¡Pago Completado!</h2>
               <p className="text-[var(--foreground-muted)] max-w-md">
-                Tu pedido ha sido procesado correctamente. Recibirás un email con los detalles de tu compra.
+                ¡Felicidades! Tu pedido ha sido procesado correctamente. Puedes acercarte a nuestro local para recoger tu pizza presentando este comprobante.
               </p>
               
-              <div className="mt-4 p-4 bg-[var(--card-background)] rounded-lg w-full max-w-sm">
+              <div className="mt-4 p-4 bg-[var(--card-background)] rounded-lg w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <p className="font-bold text-lg">Comprobante de Pedido</p>
+                  <p className="text-[var(--foreground-muted)] text-sm">{new Date().toLocaleDateString()}</p>
+                </div>
+                
                 <p className="text-[var(--foreground-muted)] text-sm">ID de Pedido</p>
                 <p className="font-mono font-medium">{orderDetails.orderId}</p>
                 
-                <div className="mt-2 pt-2 border-t border-[var(--border)]">
-                  <p className="text-[var(--foreground-muted)] text-sm">Total</p>
-                  <p className="font-bold">€{orderDetails.total.toFixed(2)}</p>
+                <div className="mt-4 pt-2 border-t border-[var(--border)]">
+                  <div className="flex items-center text-[var(--foreground-muted)] my-2">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <p className="text-sm">Recoger en tienda</p>
+                  </div>
+                  
+                  <h3 className="font-medium mt-3 mb-2">Productos:</h3>
+                  {orderDetails.items.map((item) => (
+                    <div key={item.id} className="flex justify-between text-sm py-1">
+                      <span>{item.quantity}x {item.name} ({item.size})</span>
+                      <span>{formatCOP(item.price * item.quantity)}</span>
+                    </div>
+                  ))}
+                  
+                  <div className="mt-2 pt-2 border-t border-[var(--border)]">
+                    <div className="flex justify-between text-[var(--foreground-muted)]">
+                      <span>Subtotal</span>
+                      <span>{formatCOP(orderDetails.subtotal)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)] mt-2">
+                      <span>Total</span>
+                      <span>{formatCOP(orderDetails.total)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+              
+              <motion.div 
+                className="mt-6 text-xl font-medium text-[var(--accent)]"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                ¡Tu pizza te estará esperando en nuestro local! Gracias por tu compra.
+              </motion.div>
               
               <Link href="/Menu">
                 <motion.button
@@ -253,7 +357,7 @@ const Payment = () => {
                 <AlertCircle className="h-20 w-20 text-red-500" />
               </motion.div>
               
-              <h2 className="text-2xl font-bold">Error de Pago</h2>
+              <h2 className="text-2xl font-bold font-['Dancing_Script']">Error de Pago</h2>
               <p className="text-[var(--foreground-muted)] max-w-md">
                 Ha ocurrido un error al procesar tu pago. Por favor, verifica los datos de tu tarjeta e inténtalo de nuevo.
               </p>
@@ -283,22 +387,28 @@ const Payment = () => {
             >
               <div className="lg:col-span-1 order-2 lg:order-1">
                 <div className="bg-[var(--card-background)] rounded-lg p-6 shadow-md sticky top-6">
-                  <h2 className="text-xl font-bold mb-4 pb-2 border-b border-[var(--border)]">
+                  <h2 className="text-xl font-bold mb-4 pb-2 border-b border-[var(--border)] font-['Dancing_Script']">
                     Resumen del Pedido
                   </h2>
+                  
+                  <div className="flex items-center mb-4 text-[var(--foreground-muted)]">
+                    <MapPin className="h-5 w-5 mr-2" />
+                    <p>Recoger en tienda</p>
+                  </div>
                   
                   <div className="space-y-4 mb-4">
                     {orderDetails.items.map((item) => (
                       <div key={item.id} className="flex items-center space-x-3">
-                        <div 
-                          className="w-12 h-12 rounded-md bg-cover bg-center" 
-                          style={{ backgroundImage: `url(${item.image})` }}
+                        <img 
+                          src={item.image} 
+                          alt={item.name} 
+                          className="w-12 h-12 rounded-md object-cover"
                         />
                         <div className="flex-1">
                           <p className="font-medium">{item.name}</p>
                           <div className="flex justify-between text-sm text-[var(--foreground-muted)]">
-                            <span>{item.quantity}x €{item.price.toFixed(2)}</span>
-                            <span>€{(item.price * item.quantity).toFixed(2)}</span>
+                            <span>{item.quantity}x · {item.size}</span>
+                            <span>{formatCOP(item.price * item.quantity)}</span>
                           </div>
                         </div>
                       </div>
@@ -308,15 +418,11 @@ const Payment = () => {
                   <div className="pt-4 border-t border-[var(--border)] space-y-2">
                     <div className="flex justify-between text-[var(--foreground-muted)]">
                       <span>Subtotal</span>
-                      <span>€{orderDetails.subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-[var(--foreground-muted)]">
-                      <span>Envío</span>
-                      <span>€{orderDetails.deliveryFee.toFixed(2)}</span>
+                      <span>{formatCOP(orderDetails.subtotal)}</span>
                     </div>
                     <div className="flex justify-between font-bold text-lg pt-2 border-t border-[var(--border)]">
                       <span>Total</span>
-                      <span>€{orderDetails.total.toFixed(2)}</span>
+                      <span>{formatCOP(orderDetails.total)}</span>
                     </div>
                   </div>
                 </div>
@@ -324,7 +430,7 @@ const Payment = () => {
               
               <div className="lg:col-span-2 order-1 lg:order-2">
                 <div className="bg-[var(--card-background)] rounded-lg p-6 shadow-md">
-                  <h2 className="text-xl font-bold mb-6">Información de Pago</h2>
+                  <h2 className="text-xl font-bold mb-6 font-['Dancing_Script']">Información de Pago</h2>
                   
                   <form onSubmit={processPayment} className="space-y-6">
                     <div className="space-y-4">
@@ -426,80 +532,6 @@ const Payment = () => {
                     </div>
 
                     <div className="space-y-4">
-                      <h3 className="font-medium text-[var(--foreground-muted)]">Dirección de Envío</h3>
-                      
-                      <div>
-                        <label className="block text-sm mb-1" htmlFor="address">
-                          Dirección
-                        </label>
-                        <input
-                          type="text"
-                          id="address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
-                          placeholder="Calle, número, piso..."
-                          className={`
-                            w-full px-4 py-2 
-                            bg-[var(--background)]
-                            border ${formErrors.address ? 'border-red-500' : 'border-[var(--border)]'}
-                            rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)]
-                          `}
-                        />
-                        {formErrors.address && (
-                          <p className="mt-1 text-sm text-red-500">{formErrors.address}</p>
-                        )}
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm mb-1" htmlFor="city">
-                            Ciudad
-                          </label>
-                          <input
-                            type="text"
-                            id="city"
-                            name="city"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            placeholder="Ciudad"
-                            className={`
-                              w-full px-4 py-2 
-                              bg-[var(--background)]
-                              border ${formErrors.city ? 'border-red-500' : 'border-[var(--border)]'}
-                              rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)]
-                            `}
-                          />
-                          {formErrors.city && (
-                            <p className="mt-1 text-sm text-red-500">{formErrors.city}</p>
-                          )}
-                        </div>
-                        
-                        <div>
-                          <label className="block text-sm mb-1" htmlFor="zipCode">
-                            Código Postal
-                          </label>
-                          <input
-                            type="text"
-                            id="zipCode"
-                            name="zipCode"
-                            value={formData.zipCode}
-                            onChange={handleInputChange}
-                            placeholder="Código Postal"
-                            className={`
-                              w-full px-4 py-2 
-                              bg-[var(--background)]
-                              border ${formErrors.zipCode ? 'border-red-500' : 'border-[var(--border)]'}
-                              rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)]
-                            `}
-                          />
-                          {formErrors.zipCode && (
-                            <p className="mt-1 text-sm text-red-500">{formErrors.zipCode}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
                       <h3 className="font-medium text-[var(--foreground-muted)]">Información de Contacto</h3>
                       
                       <div>
@@ -568,6 +600,7 @@ const Payment = () => {
                         transition-colors
                         disabled:opacity-70
                         disabled:cursor-not-allowed
+                        text-lg
                       "
                       type="submit"
                     >
@@ -575,7 +608,7 @@ const Payment = () => {
                         <span>Procesando Pago...</span>
                       ) : (
                         <>
-                          <span>Pagar €{orderDetails.total.toFixed(2)}</span>
+                          <span>Pagar {formatCOP(orderDetails.total)}</span>
                           <CreditCard className="h-5 w-5" />
                         </>
                       )}
