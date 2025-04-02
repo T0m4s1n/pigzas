@@ -19,7 +19,6 @@ const useClientSearchParams = () => {
   return searchParams;
 };
 
-// Define OrderDetails type for TypeScript
 export interface OrderDetails {
   orderId: string;
   items: {
@@ -59,20 +58,16 @@ const Payment = () => {
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
   const [isClient, setIsClient] = useState(false);
 
-  // Set isClient to true on component mount
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Get the order ID once searchParams is available
   useEffect(() => {
     if (searchParams) {
       const id = searchParams.get('id');
       setOrderId(id);
     }
   }, [searchParams]);
-
-  // Load order details once orderId is available
   useEffect(() => {
     if (isClient && orderId) {
       try {
@@ -154,9 +149,7 @@ const Payment = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Format the price in COP format (no decimals)
   const formatCOP = (amount: number) => {
-    // Convert to integer by removing decimal part
     const integerAmount = Math.round(amount);
     return `$${integerAmount.toLocaleString('es-CO')}`;
   };
@@ -169,10 +162,8 @@ const Payment = () => {
     setPaymentStatus('processing');
     
     try {
-      // Simulate payment processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Always make the payment successful for this demo
+    
       const paymentResponse = {
         success: true,
         transactionId: `TXN-${Date.now()}`
@@ -204,8 +195,7 @@ const Payment = () => {
       setPaymentStatus('error');
     }
   };
-  
-  // Show loading or error state if needed
+
   if (!isClient) {
     return (
       <section className="min-h-screen flex items-center justify-center bg-[var(--background)]">
@@ -227,7 +217,7 @@ const Payment = () => {
   }
 
   return (
-    <section className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <section className="min-h-screen text-[var(--foreground)]">
       <PigzasBackground/>
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');

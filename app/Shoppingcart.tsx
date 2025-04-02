@@ -5,7 +5,6 @@ import { X, Minus, Plus, ShoppingBag, ArrowRight, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-// Define the cart item interface
 export interface CartItem {
   id: string;
   name: string;
@@ -15,7 +14,6 @@ export interface CartItem {
   image: string;
 }
 
-// Order details interface for checkout
 export interface OrderDetails {
   orderId: string;
   items: CartItem[];
@@ -25,11 +23,9 @@ export interface OrderDetails {
   timestamp: string;
 }
 
-// Props interface for the component
 interface ShoppingCartProps {
   isOpen: boolean;
   onClose: () => void;
-  // Instead of passing the state directly, use a cart service pattern
   cartService?: {
     getItems: () => CartItem[];
     addItem: (item: CartItem) => void;
@@ -44,12 +40,10 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
   onClose, 
   cartService 
 }) => {
-  // If no cart service is provided, create local state
   const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const router = useRouter();
 
-  // Initialize cart from localStorage on component mount
   useEffect(() => {
     if (!cartService) {
       try {
@@ -63,29 +57,23 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
     }
   }, [cartService]);
 
-  // Save local cart to localStorage when it changes
   useEffect(() => {
     if (!cartService) {
       localStorage.setItem('shoppingCart', JSON.stringify(localCartItems));
     }
   }, [localCartItems, cartService]);
 
-  // Use cart service if provided, otherwise use local state
   const cartItems = cartService ? cartService.getItems() : localCartItems;
 
-  // Calculate totals - using the values directly as COP
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryFee = subtotal > 0 ? 12000 : 0;
   const total = subtotal + deliveryFee;
 
-  // Display the complete price without any formatting, removing decimal points
   const formatCOP = (amount: number) => {
-    // Convert to integer by removing decimal part
     const integerAmount = Math.round(amount);
     return `$${integerAmount}`;
   }
 
-  // Cart operations
   const updateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     
@@ -129,10 +117,8 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
         timestamp: new Date().toISOString()
       };
 
-      // Save order to localStorage
       localStorage.setItem(`order_${orderId}`, JSON.stringify(orderDetails));
 
-      // Clear cart after successful order
       setTimeout(() => {
         clearCart();
         setIsCheckingOut(false);
@@ -146,7 +132,6 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({
     }
   };
 
-  // Close on escape key
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();

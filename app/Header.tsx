@@ -16,8 +16,6 @@ const PizzaHeader: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Load cart from localStorage on component mount
     try {
       const savedCart = localStorage.getItem('shoppingCart');
       if (savedCart) {
@@ -28,7 +26,6 @@ const PizzaHeader: React.FC = () => {
     }
   }, []);
 
-  // Save cart to localStorage when it changes
   useEffect(() => {
     if (mounted) {
       localStorage.setItem('shoppingCart', JSON.stringify(cartItems));

@@ -22,7 +22,6 @@ const PizzaDesigner = () => {
     const [pizzaCrust, setPizzaCrust] = useState<'thin' | 'traditional' | 'thick' | 'stuffed'>('traditional');
     const [twoFlavors, setTwoFlavors] = useState(false);
     
-    // New toppings state management
     const [bakingTime, setBakingTime] = useState(15);
     const [cutStyle, setCutStyle] = useState('traditional');
     const [price, setPrice] = useState(18900);
@@ -35,30 +34,25 @@ const PizzaDesigner = () => {
                 : [...prev, topping]
         );
     };
-    // Pizza visualization sizes based on selected size
     const pizzaSizeDimensions = {
         small: { outerInset: 3, innerInset: 9, scale: 0.85 },
         medium: { outerInset: 2, innerInset: 8, scale: 1 },
         large: { outerInset: 1.5, innerInset: 7, scale: 1.1 },
         xl: { outerInset: 1, innerInset: 6, scale: 1.2 },
     };
-
-    // Pizza crust visualization based on selected crust
     const pizzaCrustStyles = {
         thin: { crustWidth: 1, crustColor: '#C8964E' },
         traditional: { crustWidth: 2, crustColor: '#C8964E' },
         thick: { crustWidth: 3, crustColor: '#C8964E' },
-        stuffed: { crustWidth: 3, crustColor: '#E6BB7B' }, // Slightly different color for stuffed
+        stuffed: { crustWidth: 3, crustColor: '#E6BB7B' },
     };
     
-    // Baking time affects pizza color
     const bakingTimeColors = {
-        10: { baseColor: '#FEE975', crustAdjustment: -10 }, // Lighter
-        15: { baseColor: '#FDC234', crustAdjustment: 0 },   // Normal
-        20: { baseColor: '#E6A328', crustAdjustment: 10 },  // Darker/more baked
+        10: { baseColor: '#FEE975', crustAdjustment: -10 },
+        15: { baseColor: '#FDC234', crustAdjustment: 0 },
+        20: { baseColor: '#E6A328', crustAdjustment: 10 },
     };
 
-    // Define interface for toppings
     interface Topping {
         id: string;
         name: string;
@@ -96,7 +90,6 @@ const PizzaDesigner = () => {
         { id: 'stuffed', name: 'Rellena de Queso', price: 3000 } as const,
     ], []);
 
-    // Update price calculation when any relevant state changes
     React.useEffect(() => {
         let basePrice = 10000;
         
@@ -126,14 +119,10 @@ const PizzaDesigner = () => {
         alert("Funcion no disponible temporalmente");
         router.push('');
     };
-
-    // Common pizza visualization component for consistency across steps
     const PizzaVisualization = ({ showToppings = true, showCutStyle = false, size = "md", twoFlavors = false, pizzaCrust, selectedToppings = [] }: { showToppings?: boolean; showCutStyle?: boolean; size?: string; twoFlavors?: boolean; pizzaCrust?: 'traditional' | 'thin' | 'thick' | 'stuffed'; selectedToppings?: Topping[] }) => {
         const dimensions = pizzaSizeDimensions[pizzaSize];
         const crustStyle = pizzaCrust ? pizzaCrustStyles[pizzaCrust] : pizzaCrustStyles['traditional'];
-        const bakingColor = bakingTimeColors[bakingTime as keyof typeof bakingTimeColors] || bakingTimeColors[15]; // Default to 15 if invalid
-        
-        // Size classes based on prop
+        const bakingColor = bakingTimeColors[bakingTime as keyof typeof bakingTimeColors] || bakingTimeColors[15];
         const sizeClasses = {
             sm: "w-32 h-32",
             md: "w-64 h-64",
@@ -145,7 +134,6 @@ const PizzaDesigner = () => {
                 className={`${sizeClasses} bg-[var(--card-hover)] rounded-full mx-auto relative overflow-hidden border-4 border-[var(--brass-600)]`}
                 style={{ maxWidth: size === "lg" ? "400px" : undefined }}
             >
-                {/* Pizza crust (outer edge) */}
                 <section className="absolute inset-2 rounded-full" 
                     style={{ 
                         backgroundColor: crustStyle.crustColor,
@@ -153,7 +141,6 @@ const PizzaDesigner = () => {
                     }}
                 ></section>
                 
-                {/* Pizza base (cheese) */}
                 <section className="absolute rounded-full" 
                     style={{ 
                         backgroundColor: bakingColor.baseColor,
@@ -161,14 +148,11 @@ const PizzaDesigner = () => {
                     }}
                 ></section>
                 
-                {/* Divider for half and half pizza */}
                 {twoFlavors && (
                     <section className="absolute top-0 bottom-0 left-1/2 w-1 bg-[var(--brass-600)] transform -translate-x-1/2 z-10"></section>
                 )}
 
-                {/* Render toppings if showing them */}
                 {showToppings && selectedToppings.flatMap((topping, toppingIndex) => {
-                    // Create 3-7 instances of each topping based on topping type
                     const instanceCount = topping.id.includes('cheese') ? 7 : 
                                         topping.id.includes('pepperoni') ? 6 : 
                                         topping.id.includes('olive') ? 5 : 4;
@@ -178,11 +162,9 @@ const PizzaDesigner = () => {
                         const randomRadius = 10 + (instanceIndex * 30 + toppingIndex * 5) % 30;
                         const angleInRadians = (randomAngle * Math.PI) / 180;
                         
-                        // Calculate x,y position using polar coordinates
                         const posX = 50 + randomRadius * Math.cos(angleInRadians);
                         const posY = 50 + randomRadius * Math.sin(angleInRadians);
-                        
-                        // Skip if we're doing half-and-half and this topping should be on the other half
+                    
                         if (twoFlavors) {
                             const isLeftHalf = posX < 50;
                             if ((toppingIndex % 2 === 0 && !isLeftHalf) || 
@@ -190,11 +172,8 @@ const PizzaDesigner = () => {
                                 return null;
                             }
                         }
-                        
-                        // Random rotation for visual interest
                         const rotation = (toppingIndex * 20 + instanceIndex * 40) % 360;
                         
-                        // Size based on topping type and pizza size
                         const baseSize = topping.id === 'olive' || topping.id === 'pepperoni' ? 6 :
                                         topping.id === 'pineapple' ? 7 : 8;
                                        
@@ -381,7 +360,6 @@ const PizzaDesigner = () => {
                     </section>
                 );
             case 2:
-                // New case for ingredients selection
                 return (
                     <section className="flex flex-col lg:flex-row gap-8 items-center">
                         <section className="lg:w-2/5 flex justify-center">
@@ -392,9 +370,7 @@ const PizzaDesigner = () => {
                             <section className="space-y-4">
                                 <h3 className="text-xl font-semibold text-[var(--foreground)]">Selecciona los ingredientes</h3>
                                 
-                                {/* Categorized toppings display */}
                                 <section className="space-y-6">
-                                    {/* Cheese section */}
                                     <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Quesos</h4>
                                         <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -431,8 +407,6 @@ const PizzaDesigner = () => {
                                             ))}
                                         </section>
                                     </section>
-                                    
-                                    {/* Meats section */}
                                     <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Carnes</h4>
                                         <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -469,8 +443,6 @@ const PizzaDesigner = () => {
                                             ))}
                                         </section>
                                     </section>
-                                    
-                                    {/* Vegetables section */}
                                     <section>
                                         <h4 className="font-medium text-[var(--foreground-muted)] mb-2">Vegetales</h4>
                                         <section className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -508,8 +480,7 @@ const PizzaDesigner = () => {
                                         </section>
                                     </section>
                                 </section>
-                                
-                                {/* Selected ingredients summary */}
+
                                 <section className="mt-6 p-4 bg-[var(--card-hover)] rounded-lg">
                                     <h4 className="font-medium text-[var(--foreground)] mb-2">Ingredientes seleccionados:</h4>
                                     {selectedIngredients.length > 0 ? (
@@ -708,18 +679,12 @@ const PizzaDesigner = () => {
                     </section>
                 );
       case 5: 
-          // Calcular precio total basado en todas las selecciones
           const calculateTotalPrice = () => {
-              // Precio base según tamaño
               const basePrice = 10000 * (sizeOptions.find(size => size.id === pizzaSize)?.priceMultiplier || 1);
-              
-              // Precio adicional por tipo de masa
               const crustPrice = crustOptions.find(crust => crust.id === pizzaCrust)?.price || 0;
-              
-              // Suma de precios de ingredientes
+            
               const ingredientsPrice = selectedIngredients.reduce((total, ing) => total + ing.price, 0);
               
-              // Precio total redondeado a 2 decimales
               return (basePrice + crustPrice + ingredientsPrice).toFixed(2);
           };
           
@@ -740,7 +705,6 @@ const PizzaDesigner = () => {
                           <section className="absolute top-0 bottom-0 left-1/2 w-2 bg-[var(--brass-600)] transform -translate-x-1/2] z-10"></section>
                       )}
                       {selectedIngredients.map((ingredient, index) => {
-                          // Similar layout calculation as in the design step
                           const numIngredients = selectedIngredients.length;
                           const angle = (2 * Math.PI * index) / Math.max(numIngredients, 1);
                           const radius = 30;

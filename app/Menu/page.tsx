@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import PigzasBackground from '../Pizzabackground';
 import ShoppingCart from '../Shoppingcart';
 
-// Define CartItem interface (same as in ShoppingCart)
 export interface CartItem {
   id: string;
   name: string;
@@ -18,13 +17,11 @@ export interface CartItem {
   image: string;
 }
 
-// Create a CartService class for managing the cart
 class CartService {
   private items: CartItem[] = [];
   private listeners: (() => void)[] = [];
 
   constructor() {
-    // Load cart from localStorage on initialization
     this.loadCart();
   }
 
@@ -41,7 +38,6 @@ class CartService {
 
   private saveCart(): void {
     localStorage.setItem('shoppingCart', JSON.stringify(this.items));
-    // Notify all listeners that cart has changed
     this.listeners.forEach(listener => listener());
   }
 
@@ -50,16 +46,13 @@ class CartService {
   }
 
   addItem(item: CartItem): void {
-    // Check if the item already exists (by name and size)
     const existingItemIndex = this.items.findIndex(
       i => i.name === item.name && i.size === item.size
     );
 
     if (existingItemIndex >= 0) {
-      // If item exists, increment quantity
       this.items[existingItemIndex].quantity += item.quantity;
     } else {
-      // Otherwise add new item
       this.items.push(item);
     }
     
@@ -92,7 +85,6 @@ class CartService {
 
   subscribe(listener: () => void): () => void {
     this.listeners.push(listener);
-    // Return unsubscribe function
     return () => {
       this.listeners = this.listeners.filter(l => l !== listener);
     };
@@ -172,36 +164,30 @@ export default function Menu() {
     }
   ]);
 
-  // Subscribe to cart changes
   useEffect(() => {
     const updateCartCount = () => {
       setCartItemCount(cartService.getItemCount());
     };
     
-    // Initial count
     updateCartCount();
     
-    // Subscribe to future changes
     const unsubscribe = cartService.subscribe(updateCartCount);
     
-    // Cleanup subscription
     return unsubscribe;
   }, [cartService]);
 
-  // Function to add pizza to cart
   const addToCart = (pizza: typeof pizzas[number], size = "Mediana") => {
     const cartItem: CartItem = {
-      id: `${pizza.id}-${Date.now()}`, // Ensure unique ID for cart items
+      id: `${pizza.id}-${Date.now()}`,
       name: pizza.name,
       size: size,
-      price: pizza.price, // Convert to Euros format (assuming price is in cents)
+      price: pizza.price,
       quantity: 1,
       image: pizza.image
     };
     
     cartService.addItem(cartItem);
     
-    // Show cart feedback
     const timer = setTimeout(() => {
       setIsCartOpen(true);
     }, 300);
@@ -221,7 +207,6 @@ export default function Menu() {
     router.push('/Design');
   };
 
-  // Format price with dot as thousands separator and COP currency
   const formatPrice = (price: number) => {
     return price.toLocaleString('es-CO', {
       style: 'decimal',
@@ -241,7 +226,6 @@ export default function Menu() {
         }
       `}</style>
 
-      {/* Shopping Cart Button */}
       <motion.button
         className="fixed right-6 bottom-6 z-30 bg-[var(--brass-500)] text-white p-3 rounded-full shadow-lg flex items-center space-x-2"
         whileHover={{ scale: 1.1, backgroundColor: 'var(--brass-600)' }}
@@ -260,7 +244,6 @@ export default function Menu() {
         )}
       </motion.button>
 
-      {/* Shopping Cart Component */}
       <ShoppingCart 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)}
@@ -413,7 +396,6 @@ export default function Menu() {
         </section>
       </section>
 
-      {/* Pizza Detail Modal */}
       <AnimatePresence>
         {selectedPizza && (
           <>

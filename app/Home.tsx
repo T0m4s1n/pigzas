@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Pizza, PizzaIcon, ShoppingBag, Info } from 'lucide-react';
 import PigzasBackground from './Pizzabackground';
-import ShoppingCart from './Shoppingcart'; // Import the ShoppingCart component
+import ShoppingCart from './Shoppingcart';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -19,8 +19,7 @@ export default function Home() {
   } | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<{ id: string; size: string; quantity: number; }[]>([]);
-  
-  // Fetch cart from localStorage on component mount
+
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('shoppingCart');
@@ -32,27 +31,22 @@ export default function Home() {
     }
   }, []);
 
-  // Save cart to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('shoppingCart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Cart service functions
   const cartService = {
     getItems: () => cartItems,
     addItem: (item: { id: string; size: string; quantity: number; }) => {
-      // Check if item already exists in cart
       const existingItemIndex = cartItems.findIndex(
         cartItem => cartItem.id === item.id && cartItem.size === item.size
       );
       
       if (existingItemIndex >= 0) {
-        // If item exists, update quantity
         const updatedItems = [...cartItems];
         updatedItems[existingItemIndex].quantity += item.quantity;
         setCartItems(updatedItems);
       } else {
-        // If item doesn't exist, add new item
         setCartItems([...cartItems, item]);
       }
     },
@@ -112,17 +106,16 @@ export default function Home() {
     const pizza = pizzaFlavors.find(p => p.id === pizzaId);
     if (pizza) {
       const cartItem = {
-        id: `${pizza.id}-medium`, // Add size to make unique id
+        id: `${pizza.id}-medium`,
         name: pizza.name,
-        size: "Mediana", // Default size
+        size: "Mediana",
         price: pizza.price,
         quantity: 1,
         image: pizza.image
       };
       
       cartService.addItem(cartItem);
-      
-      // Provide visual feedback (optional)
+
       setIsCartOpen(true);
     }
   };
@@ -402,8 +395,6 @@ export default function Home() {
           </motion.article>
         </motion.aside>
       )}
-      
-      {/* Shopping Cart Component */}
       <ShoppingCart 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)}
