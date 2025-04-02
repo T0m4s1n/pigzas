@@ -143,7 +143,7 @@ export default function AboutUs() {
               className="flex flex-col items-center text-center"
             >
               <Award className="h-16 w-16 text-[var(--accent)] mb-4" />
-              <h4 className="text-xl font-bold mb-2 text-[var(--foreground)]">Mejor Pizza 2023</h4>
+              <h4 className="text-xl font-bold mb-2 text-[var(--foreground)]">Mejor Pizza 2025</h4>
               <p className="text-[var(--foreground-muted)]">Galardonados con el premio a la mejor pizza artesanal de la región.</p>
             </motion.section>
             <motion.section
