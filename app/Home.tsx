@@ -1,12 +1,73 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Pizza, PizzaIcon, ShoppingBag, Info } from 'lucide-react';
 import PigzasBackground from './Pizzabackground';
+import ShoppingCart from './Shoppingcart'; // Import the ShoppingCart component
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
+  const [currentPizza, setCurrentPizza] = useState<{
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    details: string;
+    prepTime: string;
+  } | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<{ id: string; size: string; quantity: number; }[]>([]);
+  
+  // Fetch cart from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem('shoppingCart');
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error("Failed to load cart from localStorage:", error);
+    }
+  }, []);
+
+  // Save cart to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('shoppingCart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Cart service functions
+  const cartService = {
+    getItems: () => cartItems,
+    addItem: (item: { id: string; size: string; quantity: number; }) => {
+      // Check if item already exists in cart
+      const existingItemIndex = cartItems.findIndex(
+        cartItem => cartItem.id === item.id && cartItem.size === item.size
+      );
+      
+      if (existingItemIndex >= 0) {
+        // If item exists, update quantity
+        const updatedItems = [...cartItems];
+        updatedItems[existingItemIndex].quantity += item.quantity;
+        setCartItems(updatedItems);
+      } else {
+        // If item doesn't exist, add new item
+        setCartItems([...cartItems, item]);
+      }
+    },
+    updateItemQuantity: (id: string, quantity: number) => {
+      setCartItems(items => 
+        items.map(item => item.id === id ? { ...item, quantity } : item)
+      );
+    },
+    removeItem: (id: string) => {
+      setCartItems(items => items.filter(item => item.id !== id));
+    },
+    clearCart: () => {
+      setCartItems([]);
+    }
+  };
   
   const pizzaFlavors = [
     {
@@ -48,9 +109,31 @@ export default function Home() {
   ];
 
   const handleAddToCart = (pizzaId: number) => {
-    console.log(`Added pizza ID ${pizzaId} to cart`);
+    const pizza = pizzaFlavors.find(p => p.id === pizzaId);
+    if (pizza) {
+      const cartItem = {
+        id: `${pizza.id}-medium`, // Add size to make unique id
+        name: pizza.name,
+        size: "Mediana", // Default size
+        price: pizza.price,
+        quantity: 1,
+        image: pizza.image
+      };
+      
+      cartService.addItem(cartItem);
+      
+      // Provide visual feedback (optional)
+      setIsCartOpen(true);
+    }
   };
 
+  const openDetailModal = (pizzaId: number) => {
+    const pizza = pizzaFlavors.find(p => p.id === pizzaId);
+    if (pizza) {
+      setCurrentPizza(pizza);
+      setShowModal(true);
+    }
+  };
 
   return (
     <>
@@ -136,6 +219,7 @@ export default function Home() {
               text-lg
               font-semibold
             "
+            onClick={() => setIsCartOpen(true)}
           >
             <ShoppingBag className="h-7 w-7" />
             <span>Comenzar a Diseñar</span>
@@ -158,7 +242,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
         >
           <section className="flex flex-col md:flex-row">
-            <figure className="md:w-1/2 h-64 md:h-auto relative">
+            <figure className="md:w-1/2 h-64 md:h-auto relative cursor-pointer" onClick={() => openDetailModal(pizzaFlavors[1].id)}>
               <span 
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${pizzaFlavors[1].image})` }}
@@ -211,8 +295,9 @@ export default function Home() {
               whileHover={{ y: -5 }}
             >
               <figure 
-                className="h-48 bg-cover bg-center relative"
+                className="h-48 bg-cover bg-center relative cursor-pointer"
                 style={{ backgroundImage: `url(${pizza.image})` }}
+                onClick={() => openDetailModal(pizza.id)}
               >
                 <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <h3 className="text-white font-bold text-lg">{pizza.name}</h3>
@@ -246,7 +331,7 @@ export default function Home() {
         </ul>
       </section>
       
-      {showModal && (
+      {showModal && currentPizza && (
         <motion.aside 
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
@@ -262,7 +347,7 @@ export default function Home() {
             <figure className="relative h-64 md:h-80">
               <span 
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${pizzaFlavors[0].image})` }}
+                style={{ backgroundImage: `url(${currentPizza.image})` }}
               >
                 <span className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></span>
               </span>
@@ -275,7 +360,7 @@ export default function Home() {
                 <span className="text-2xl">&times;</span>
               </motion.button>
               <figcaption className="absolute bottom-0 left-0 p-6">
-                <h2 className="text-white text-3xl font-bold">{pizzaFlavors[0].name}</h2>
+                <h2 className="text-white text-3xl font-bold">{currentPizza.name}</h2>
               </figcaption>
             </figure>
             
@@ -283,29 +368,32 @@ export default function Home() {
               <header className="flex justify-between items-center mb-6">
                 <span className="flex items-center space-x-2">
                   <span className="bg-[var(--accent)]/10 text-[var(--accent)] px-3 py-1 rounded-full text-sm">
-                    {pizzaFlavors[0].prepTime}
+                    {currentPizza.prepTime}
                   </span>
                 </span>
                 <span className="text-2xl font-bold text-[var(--brass-500)]">
-                  ${pizzaFlavors[0].price.toLocaleString('es-CO')}
+                  ${currentPizza.price.toLocaleString('es-CO')}
                 </span>
               </header>
               
               <section className="mb-8">
                 <h3 className="text-lg font-medium mb-2 text-gray-800">Ingredientes</h3>
-                <p className="text-gray-700">{pizzaFlavors[0].description}</p>
+                <p className="text-gray-700">{currentPizza.description}</p>
               </section>
               
               <section className="mb-8">
                 <h3 className="text-lg font-medium mb-2 text-gray-800">Detalles</h3>
-                <p className="text-gray-700">{pizzaFlavors[0].details}</p>
+                <p className="text-gray-700">{currentPizza.details}</p>
               </section>
               
               <motion.button 
                 whileHover={{ scale: 1.03, backgroundColor: 'var(--brass-600)' }}
                 whileTap={{ scale: 0.97 }}
                 className="w-full py-4 bg-[var(--brass-500)] text-white rounded-xl font-medium flex items-center justify-center space-x-2"
-                onClick={() => handleAddToCart(pizzaFlavors[0].id)}
+                onClick={() => {
+                  handleAddToCart(currentPizza.id);
+                  setShowModal(false);
+                }}
               >
                 <ShoppingBag className="h-5 w-5" />
                 <span>Añadir al Carrito</span>
@@ -314,6 +402,14 @@ export default function Home() {
           </motion.article>
         </motion.aside>
       )}
+      
+      {/* Shopping Cart Component */}
+      <ShoppingCart 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)}
+        // @ts-expect-error error
+        cartService={cartService}
+      />
     </>
   );
 }
