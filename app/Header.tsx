@@ -10,13 +10,9 @@ const PizzaHeader: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<{ id: string; quantity: number }[]>([]);
   
   const { theme, toggleTheme } = useTheme() as { theme: 'light' | 'dark'; toggleTheme: () => void };
-  
-  const [cartItems, setCartItems] = useState([
-    { id: '1', name: 'Pizza Margarita', size: 'Mediana', price: 12.99, quantity: 1, image: '/api/placeholder/80/80' },
-    { id: '2', name: 'Pizza Pepperoni', size: 'Grande', price: 15.99, quantity: 2, image: '/api/placeholder/80/80' },
-  ]);
 
   useEffect(() => {
     setMounted(true);
